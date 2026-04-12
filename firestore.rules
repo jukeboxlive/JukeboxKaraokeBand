@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Songs: public read, write allowed (admin seed + management)
+    match /songs/{songId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    // Applicants: public read + create, update/delete for admin actions
+    match /applicants/{applicantId} {
+      allow read: if true;
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() <= 50
+                    && request.resource.data.surname is string
+                    && request.resource.data.surname.size() > 0
+                    && request.resource.data.surname.size() <= 50
+                    && request.resource.data.status == "waiting"
+                    && request.resource.data.songId is string;
+      allow update, delete: if true;
+    }
+    // Votes: public read, create with validation, delete for cleanup
+    match /votes/{voteId} {
+      allow read: if true;
+      allow create: if request.resource.data.score is int
+                    && request.resource.data.score >= 1
+                    && request.resource.data.score <= 10
+                    && request.resource.data.applicantId is string
+                    && request.resource.data.deviceId is string;
+      allow update: if false;
+      allow delete: if true;
+    }
+    // Settings: public read + write (admin controls phases)
+    match /settings/{doc} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}
