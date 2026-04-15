@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { addSongRequest } from "@/lib/firebase";
+import Logo from "@/components/Logo";
 
 const LIMITS = {
   title: 100,
@@ -43,11 +44,7 @@ export default function RequestPage() {
     setSubmitting(true);
 
     try {
-      await addSongRequest({
-        title,
-        artist,
-        note,
-      });
+      await addSongRequest({ title, artist, note });
       setSubmitted(true);
     } catch {
       setError("Gönderim başarısız. Tekrar deneyin.");
@@ -57,15 +54,21 @@ export default function RequestPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4">
-        <div className="glass rounded-2xl p-8 w-full max-w-md text-center space-y-4">
-          <p className="text-5xl">🎉</p>
-          <h1 className="font-display text-2xl font-bold text-white">
-            Teşekkürler!
+      <div className="min-h-screen flex items-center justify-center px-4 py-10">
+        <div className="paper-card p-8 w-full max-w-md text-center space-y-5">
+          <div className="flex justify-center">
+            <Logo variant="circle" size={96} />
+          </div>
+          <div className="divider-ornament">
+            <span className="font-label text-xs">★ ★ ★</span>
+          </div>
+          <h1 className="font-display text-3xl uppercase leading-tight">
+            İsteğin Alındı
           </h1>
-          <p className="text-gray-400">
-            Şarkı isteğin kaydedildi. Etkinlikte söylemek istediğin şarkıyı
-            listemize ekleyeceğiz.
+          <p className="jukebox-artist text-base">
+            Seçtiğin şarkıyı listemize ekleyeceğiz.
+            <br />
+            Etkinlikte sahneye çıkman için seni bekliyoruz.
           </p>
           <button
             onClick={() => {
@@ -73,9 +76,9 @@ export default function RequestPage() {
               setSubmitted(false);
               setSubmitting(false);
             }}
-            className="btn-secondary"
+            className="btn-jukebox-red"
           >
-            Başka Bir İstek Gönder
+            Başka İstek Gönder
           </button>
         </div>
       </div>
@@ -83,19 +86,26 @@ export default function RequestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-900 px-4 py-8">
+    <div className="min-h-screen px-4 py-8">
       <div className="max-w-md mx-auto">
         <div className="text-center mb-6">
-          <h1 className="heading-primary neon-text-cyan">🎤 Karaoke Live</h1>
-          <p className="text-gray-400 text-sm mt-2">
-            Etkinlikte söylemek istediğin şarkıyı bize bildir. Listemize
-            ekleyeceğiz, gelirsen söyleyebilirsin!
+          <div className="flex justify-center mb-3">
+            <Logo variant="circle" size={140} priority />
+          </div>
+          <div className="jukebox-strip mb-3">
+            <p className="font-label text-cream-300 text-sm">
+              Karaoke Band · Sıra Sende
+            </p>
+          </div>
+          <p className="jukebox-artist text-cream-300 text-sm mt-3 max-w-xs mx-auto">
+            Söylemek istediğin şarkıyı bize bildir. Listeye alalım, etkinlikte
+            sahneye çık.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="glass rounded-2xl p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="glass p-6 space-y-4 rounded-2xl">
           <div>
-            <label className="field-label">Şarkı Adı *</label>
+            <label className="field-label">Şarkı Adı</label>
             <input
               type="text"
               value={form.title}
@@ -107,7 +117,7 @@ export default function RequestPage() {
           </div>
 
           <div>
-            <label className="field-label">Sanatçı *</label>
+            <label className="field-label">Sanatçı</label>
             <input
               type="text"
               value={form.artist}
@@ -123,7 +133,7 @@ export default function RequestPage() {
             <textarea
               value={form.note}
               onChange={(e) => setForm({ ...form, note: e.target.value })}
-              placeholder="Eklemek istediğin bir şey var mı?"
+              placeholder="Eklemek istediğin bir şey?"
               maxLength={LIMITS.note}
               rows={3}
               className="input-field resize-none"
@@ -131,14 +141,12 @@ export default function RequestPage() {
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm text-center">{error}</p>
+            <p className="text-red-300 text-sm text-center font-label tracking-widest">
+              {error}
+            </p>
           )}
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="btn-primary"
-          >
+          <button type="submit" disabled={submitting} className="btn-primary">
             {submitting ? "Gönderiliyor..." : "Gönder"}
           </button>
         </form>

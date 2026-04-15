@@ -1,7 +1,8 @@
 "use client";
 import { useMemo, useEffect, useRef } from "react";
 
-const COLORS = ["#ffd700", "#ff00aa", "#00f0ff", "#ff6b6b", "#48dbfb", "#feca57"];
+// Jukebox palette — cream, brass, jukebox red, chrome
+const COLORS = ["#e9d7a5", "#f4c869", "#d4a94b", "#c4302a", "#e04a42", "#cbcdd2"];
 
 export default function Confetti() {
   const containerRef = useRef(null);

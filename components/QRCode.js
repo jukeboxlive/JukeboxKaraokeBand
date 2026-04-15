@@ -9,8 +9,8 @@ export default function QRCode({ url, size = 220 }) {
       <QRCodeSVG
         value={url}
         size={size}
-        bgColor="#06060c"
-        fgColor="#00f0ff"
+        bgColor="#f0e2b7"
+        fgColor="#1a0f0a"
         level="M"
         className="qr-image"
       />

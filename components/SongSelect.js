@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { useSongs, useSongUsageCounts } from "@/lib/hooks";
+import Logo from "@/components/Logo";
 
 const MAX_SONG_USAGE = 2;
 
@@ -37,23 +38,25 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
   return (
     <div className="page-container">
       <div className="text-center mb-6">
-        <h1 className="heading-primary neon-text-cyan">🎤 Karaoke Live</h1>
-        <p className="text-gray-500 text-sm mt-1">Şarkını seç, sahneye çık!</p>
+        <div className="flex justify-center mb-2">
+          <Logo variant="circle" size={120} priority />
+        </div>
+        <div className="jukebox-strip py-1">
+          <p className="font-label text-xs">Şarkını Seç · Sahneye Çık</p>
+        </div>
       </div>
 
       {myApplicant && onViewMyLyrics && (
         <button
           onClick={onViewMyLyrics}
-          className="w-full mb-4 p-4 rounded-xl bg-gradient-to-r from-cyan-500/20 to-fuchsia-500/20 border border-cyan-500/30 hover:from-cyan-500/30 hover:to-fuchsia-500/30 transition-all text-left"
+          className="w-full mb-5 on-stage-card text-left"
         >
-          <p className="text-xs text-cyan-400 uppercase tracking-widest">
-            Sıradasın
-          </p>
-          <p className="font-display font-bold text-white mt-1">
+          <span className="on-stage-badge">Sıradasın</span>
+          <p className="font-display text-xl uppercase mt-2 text-cream">
             {myApplicant.songTitle}
           </p>
-          <p className="text-xs text-gray-400">
-            {myApplicant.songArtist} · Şarkı sözlerime dön →
+          <p className="jukebox-artist text-cream-300">
+            {myApplicant.songArtist} · Sözlerine dön →
           </p>
         </button>
       )}
@@ -63,22 +66,18 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="🔍 Şarkı veya sanatçı ara..."
+          placeholder="Şarkı veya sanatçı ara..."
           className="input-field"
         />
       </div>
 
       {genres.length > 2 && (
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
           {genres.map((genre) => (
             <button
               key={genre}
               onClick={() => setSelectedGenre(genre)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                selectedGenre === genre
-                  ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                  : "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10"
-              }`}
+              className={`genre-chip ${selectedGenre === genre ? "genre-chip--active" : ""}`}
             >
               {genre}
             </button>
@@ -86,42 +85,48 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
         </div>
       )}
 
-      <div className="space-y-2 max-h-[65vh] overflow-y-auto pr-1">
+      <div className="space-y-2.5 max-h-[62vh] overflow-y-auto pr-1">
         {songs.length === 0 ? (
           <p className="empty-state animate-pulse">Yükleniyor...</p>
         ) : filtered.length === 0 ? (
           <p className="empty-state">Şarkı bulunamadı</p>
         ) : (
-          filtered.map((song) => {
+          filtered.map((song, idx) => {
             const usage = songUsage[song.id] || 0;
             const isFull = usage >= MAX_SONG_USAGE;
+            const number = String(idx + 1).padStart(3, "0");
 
             return (
               <button
                 key={song.id}
                 onClick={() => !isFull && onSelect(song)}
                 disabled={isFull}
-                className={`song-card ${isFull ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`song-card pl-4 ${isFull ? "opacity-60 cursor-not-allowed" : ""}`}
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-white">{song.title}</p>
-                    <p className="text-sm text-gray-400">{song.artist}</p>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-start gap-3 min-w-0">
+                    <span className="jukebox-meta text-cream-700 pt-1 shrink-0">
+                      {number}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="song-card__title truncate">{song.title}</p>
+                      <p className="song-card__artist truncate">{song.artist}</p>
+                      {song.genre && (
+                        <p className="song-card__genre">{song.genre}</p>
+                      )}
+                    </div>
                   </div>
                   {isFull && (
-                    <span className="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded-lg shrink-0">
+                    <span className="song-card__badge song-card__badge--full">
                       Dolu
                     </span>
                   )}
                   {!isFull && usage > 0 && (
-                    <span className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-lg shrink-0">
+                    <span className="song-card__badge song-card__badge--count">
                       {usage}/{MAX_SONG_USAGE}
                     </span>
                   )}
                 </div>
-                {song.genre && (
-                  <p className="text-xs text-gray-500 mt-1">{song.genre}</p>
-                )}
               </button>
             );
           })

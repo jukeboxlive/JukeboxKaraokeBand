@@ -5,6 +5,7 @@ import { useStore } from "@/lib/store";
 import QRCode from "@/components/QRCode";
 import SongManager from "@/components/SongManager";
 import AdminAuthGate from "@/components/AdminAuthGate";
+import Logo from "@/components/Logo";
 
 function GripIcon() {
   return (
@@ -75,11 +76,19 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-900 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* header */}
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <h1 className="heading-primary neon-text-cyan">Admin Panel</h1>
+          <div className="flex items-center gap-3">
+            <Logo variant="square" size={64} priority />
+            <div>
+              <h1 className="heading-primary text-2xl">Admin Panel</h1>
+              <p className="font-label text-cream-300 text-xs mt-1">
+                Jukebox Live · Kontrol Merkezi
+              </p>
+            </div>
+          </div>
           <div className="flex items-center gap-3 flex-wrap">
             <button
               onClick={() =>
@@ -93,7 +102,7 @@ function AdminDashboard() {
               }
               className={`badge ${settings?.isLive ? "badge--live" : "badge--offline"}`}
             >
-              {settings?.isLive ? "CANLI" : "KAPALI"}
+              {settings?.isLive ? "● Canlı" : "Kapalı"}
             </button>
             <a href="/admin/istekler" className="btn-secondary">
               İstekler
@@ -105,25 +114,25 @@ function AdminDashboard() {
         </div>
 
         {actionError && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 text-red-400 text-sm text-center">
+          <div className="rounded-full py-2 px-4 text-center border border-jukebox-red/50 bg-jukebox-red/15 text-red-200 font-label tracking-widest text-sm">
             {actionError}
           </div>
         )}
 
         {/* status */}
-        <div className="glass rounded-xl p-4 flex items-center justify-between">
-          <span className="text-sm text-gray-400">
-            Durum:{" "}
-            <strong className="text-white">
+        <div className="glass px-5 py-4 rounded-full flex items-center justify-between flex-wrap gap-3">
+          <span className="font-label text-cream-300 text-sm">
+            Durum{" "}
+            <span className="text-cream ml-2">
               {phase === "idle" && "Boşta"}
               {phase === "performing" && "Performans"}
-              {phase === "voting" && `Oylama Açık (${voteCount} oy)`}
-              {phase === "showing-score" && `Puan: ${settings?.currentScore}/10`}
-              {phase === "showing-winner" && `Gecenin Kazananı: ${settings?.currentApplicantName}`}
-            </strong>
+              {phase === "voting" && `Oylama Açık · ${voteCount} Oy`}
+              {phase === "showing-score" && `Puan ${settings?.currentScore}/10`}
+              {phase === "showing-winner" && `Kazanan · ${settings?.currentApplicantName}`}
+            </span>
           </span>
           {settings?.currentApplicantName && (
-            <span className="text-sm neon-text-magenta font-semibold">
+            <span className="font-display text-cream text-lg uppercase">
               {settings.currentApplicantName}
             </span>
           )}
@@ -132,15 +141,15 @@ function AdminDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* controls */}
           <div className="space-y-4">
-            <div className="glass rounded-2xl p-6 space-y-3">
-              <h2 className="font-display text-lg font-semibold text-white">Kontroller</h2>
+            <div className="glass p-6 space-y-3 rounded-2xl">
+              <h2 className="section-title">Kontroller</h2>
 
               {phase === "idle" && nextUp && (
                 <button
                   onClick={() => safeAction(() => actions.triggerStartSong(nextUp))}
                   className="btn-action btn-action--start w-full"
                 >
-                  Sahneye Al: {nextUp.name}
+                  Sahneye Al · {nextUp.name}
                 </button>
               )}
               {phase === "idle" && !nextUp && (
@@ -165,11 +174,13 @@ function AdminDashboard() {
               {phase === "showing-score" && (
                 <div className="space-y-3">
                   <div className="text-center py-2">
-                    <p className="text-sm text-gray-400">{settings.currentApplicantName}</p>
-                    <p className="font-display text-4xl font-extrabold neon-text-gold">
+                    <p className="font-label text-cream-300 text-xs">
+                      {settings.currentApplicantName}
+                    </p>
+                    <p className="font-display text-6xl neon-text-gold mt-1">
                       {settings.currentScore}
                     </p>
-                    <p className="text-gray-400 text-sm">/ 10</p>
+                    <p className="jukebox-artist text-cream-300">/ 10</p>
                   </div>
                   <button
                     onClick={() => safeAction(() => actions.triggerResetToIdle())}
@@ -180,7 +191,9 @@ function AdminDashboard() {
                 </div>
               )}
 
-              <hr className="border-dark-600 my-2" />
+              <div className="divider-ornament py-2">
+                <span className="text-brass text-xs">★</span>
+              </div>
 
               {phase === "idle" && allQueue.some((a) => a.status === "performed") && (
                 <button
@@ -205,7 +218,7 @@ function AdminDashboard() {
                   if (confirm("Tüm sırayı temizlemek istediğinize emin misiniz?"))
                     safeAction(() => actions.clearAll());
                 }}
-                className="btn-danger w-full"
+                className="btn-danger"
               >
                 Tümünü Temizle
               </button>
@@ -214,20 +227,20 @@ function AdminDashboard() {
 
           {/* queue */}
           <div className="lg:col-span-2">
-            <div className="glass rounded-2xl p-6">
-              <h2 className="font-display text-lg font-semibold text-white mb-4">
-                Sıra ({waitingQueue.length})
+            <div className="glass p-6 rounded-2xl">
+              <h2 className="section-title mb-4">
+                Sıra <span className="text-brass-light ml-1">({waitingQueue.length})</span>
               </h2>
 
               {onStage && (
                 <div className="on-stage-card mb-4">
-                  <span className="on-stage-badge">SAHNEDE</span>
-                  <p className="font-semibold text-white mt-2">
+                  <span className="on-stage-badge">Sahnede</span>
+                  <p className="font-display text-xl uppercase text-cream mt-2">
                     {onStage.name}{" "}
-                    <span className="text-gray-500">{onStage.surname}</span>
+                    <span className="text-cream-300">{onStage.surname}</span>
                   </p>
-                  <p className="text-sm text-gray-400">
-                    {onStage.songTitle} – {onStage.songArtist}
+                  <p className="jukebox-artist text-cream-300">
+                    {onStage.songTitle} — {onStage.songArtist}
                   </p>
                   {onStage.instagram && (
                     <p className="text-xs neon-text-magenta mt-1">@{onStage.instagram}</p>
@@ -252,16 +265,16 @@ function AdminDashboard() {
                       <span className="drag-handle">
                         <GripIcon />
                       </span>
-                      <span className="font-display font-bold text-gray-500 w-6">
-                        {i + 1}
+                      <span className="font-display text-brass-light w-7 text-lg">
+                        {String(i + 1).padStart(2, "0")}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-semibold truncate">
+                        <p className="text-cream text-sm font-semibold truncate">
                           {a.name}{" "}
-                          <span className="text-gray-500">{a.surname}</span>
+                          <span className="text-cream-300/70">{a.surname}</span>
                         </p>
-                        <p className="text-xs text-gray-400 truncate">
-                          {a.songTitle} – {a.songArtist}
+                        <p className="text-xs text-cream-300 truncate italic">
+                          {a.songTitle} — {a.songArtist}
                         </p>
                         {a.instagram && (
                           <p className="text-xs neon-text-magenta">@{a.instagram}</p>
@@ -285,13 +298,11 @@ function AdminDashboard() {
         <SongManager />
 
         {/* qr */}
-        <div className="glass rounded-2xl p-6 text-center">
-          <h2 className="font-display text-lg font-semibold text-white mb-4">
-            Katılım QR Kodu
-          </h2>
+        <div className="glass p-6 rounded-2xl text-center">
+          <h2 className="section-title mb-4">Katılım QR Kodu</h2>
           <QRCode url={joinUrl} />
-          <p className="text-xs text-gray-500 mt-3">
-            Bu QR kodu TV ekranında veya mekanda gösterebilirsiniz
+          <p className="font-label text-cream-300 text-xs mt-4">
+            Bu QR Kodu TV Ekranında Veya Mekânda Gösterebilirsiniz
           </p>
         </div>
       </div>

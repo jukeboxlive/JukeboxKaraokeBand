@@ -2,6 +2,7 @@
 import { useSettings, useQueue } from "@/lib/hooks";
 import { useEffect, useState } from "react";
 import Confetti from "@/components/Confetti";
+import Logo from "@/components/Logo";
 
 export default function TVPage() {
   const settings = useSettings();
@@ -36,34 +37,43 @@ export default function TVPage() {
       <div className="ambient-glow ambient-glow--cyan" />
       <div className="ambient-glow ambient-glow--magenta" />
 
-      {/* Logo */}
-      <h1 className="tv-logo">KARAOKE LIVE</h1>
+      {/* Logo + wordmark */}
+      <div className="relative z-10 flex flex-col items-center mb-10">
+        <Logo variant="circle" size={180} priority />
+      </div>
 
-      <div className="relative z-10 w-full max-w-3xl">
+      <div className="relative z-10 w-full max-w-4xl">
         {/* ── IDLE ── */}
         {phase === "idle" && (
           <div>
-            <p className="font-display text-3xl font-bold text-white mb-2">
-              Sahne Seni Bekliyor!
+            <p className="font-display text-5xl uppercase text-cream mb-3">
+              Sahne Seni Bekliyor
             </p>
-            <p className="text-gray-400 text-lg mb-6">
-              Masandaki QR kodu okutarak sıraya gir
+            <p className="jukebox-artist text-cream-300 text-xl mb-8">
+              Masandaki QR kodu okut, sıraya gir
             </p>
 
             {waitingQueue.length > 0 && (
               <div>
-                <p className="font-display text-xl font-semibold neon-text-cyan mb-4">
-                  Sıradakiler
-                </p>
+                <div className="divider-ornament mb-5 max-w-md mx-auto">
+                  <span className="font-label text-brass-light text-sm">
+                    ★ Sıradakiler ★
+                  </span>
+                </div>
                 <div className="space-y-3 max-w-lg mx-auto">
-                  {waitingQueue.map((a, i) => (
-                    <div key={a.id} className="glass rounded-xl px-6 py-4 flex items-center gap-4">
-                      <span className="font-display text-2xl font-bold neon-text-magenta w-8">
-                        {i + 1}
+                  {waitingQueue.slice(0, 6).map((a, i) => (
+                    <div
+                      key={a.id}
+                      className="paper-card px-6 py-3 flex items-center gap-4"
+                    >
+                      <span className="font-display text-3xl text-jukebox-red w-10 shrink-0">
+                        {String(i + 1).padStart(2, "0")}
                       </span>
-                      <div className="text-left">
-                        <p className="font-semibold text-white text-lg">{a.name}</p>
-                        <p className="text-sm text-gray-400">{a.songTitle}</p>
+                      <div className="text-left min-w-0">
+                        <p className="song-card__title truncate">{a.name}</p>
+                        <p className="song-card__artist truncate">
+                          {a.songTitle}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -76,27 +86,32 @@ export default function TVPage() {
         {/* ── PERFORMING ── */}
         {phase === "performing" && (
           <div>
-            <div className="performer-avatar">🎤</div>
-            <p className="text-gray-400 uppercase tracking-[0.3em] text-sm mb-3">
-              Sahnede
+            <div className="performer-avatar">
+              <span className="text-cream-100">🎤</span>
+            </div>
+            <p className="font-label text-brass-light text-base mb-3">
+              Şu An Sahnede
             </p>
-            <p className="font-display text-6xl font-extrabold text-white mb-3">
+            <p className="font-display text-7xl uppercase text-cream mb-4 leading-none">
               {settings?.currentApplicantName}
             </p>
-            <p className="text-2xl neon-text-cyan font-display font-semibold">
+            <p className="font-display text-3xl uppercase text-jukebox-red-light">
               {settings?.currentSongTitle}
             </p>
             {settings?.currentSongArtist && (
-              <p className="text-lg text-gray-400 mt-1">
+              <p className="jukebox-artist text-cream-300 text-xl mt-1">
                 {settings.currentSongArtist}
               </p>
             )}
 
             {nextPerson && (
-              <div className="mt-12 glass rounded-xl px-8 py-4 inline-block">
-                <p className="text-sm text-gray-400">Sıradaki</p>
-                <p className="font-display text-xl font-semibold text-white">
-                  {nextPerson.name} – {nextPerson.songTitle}
+              <div className="mt-12 paper-card inline-block px-8 py-3">
+                <p className="jukebox-meta">Sıradaki</p>
+                <p className="song-card__title mt-1">
+                  {nextPerson.name}{" "}
+                  <span className="song-card__artist ml-2">
+                    — {nextPerson.songTitle}
+                  </span>
                 </p>
               </div>
             )}
@@ -106,26 +121,25 @@ export default function TVPage() {
         {/* ── VOTING ── */}
         {phase === "voting" && (
           <div>
-            <p className="font-display text-5xl font-extrabold text-white mb-4">
-              ŞİMDİ OYLAYIN!
+            <div className="jukebox-strip py-2 max-w-xl mx-auto mb-4">
+              <p className="font-label text-brass-light text-lg">
+                Şimdi Oylayın
+              </p>
+            </div>
+            <p className="font-display text-6xl uppercase text-cream mb-4">
+              {settings?.currentApplicantName}
             </p>
-            <p className="text-xl text-gray-400 mb-2">
-              <span className="neon-text-cyan font-semibold">
-                {settings?.currentApplicantName}
-              </span>{" "}
-              için puan verin
-            </p>
-            <p className="text-lg text-gray-500">
+            <p className="jukebox-artist text-2xl text-cream-300">
               {settings?.currentSongTitle}
             </p>
-            <div className="flex gap-2 justify-center mt-8">
+            <div className="flex gap-3 justify-center mt-10 flex-wrap">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                 <div
                   key={n}
                   className="tv-vote-number"
                   style={{ animationDuration: `${1 + n * 0.1}s` }}
                 >
-                  {n}
+                  <span>{n}</span>
                 </div>
               ))}
             </div>
@@ -135,18 +149,18 @@ export default function TVPage() {
         {/* ── SHOWING SCORE ── */}
         {phase === "showing-score" && (
           <div>
-            <p className="font-display text-4xl font-extrabold text-white mb-6">
+            <p className="font-label text-brass-light text-base mb-3">
+              Puan Verildi
+            </p>
+            <p className="font-display text-5xl uppercase text-cream mb-6">
               {settings?.currentApplicantName}
             </p>
             {scoreVisible && (
               <div className="score-pop">
-                <p className="text-gray-300 uppercase tracking-widest text-sm mb-2">
-                  Puan
-                </p>
-                <span className="font-display text-[120px] leading-none font-black neon-text-gold">
+                <span className="font-display text-[160px] leading-none neon-text-gold">
                   {settings?.currentScore}
                 </span>
-                <span className="font-display text-3xl text-gray-400 font-bold ml-2">
+                <span className="font-display text-4xl text-cream-300 ml-3">
                   / 10
                 </span>
               </div>
@@ -157,21 +171,20 @@ export default function TVPage() {
         {/* ── SHOWING WINNER ── */}
         {phase === "showing-winner" && (
           <div>
-            <p className="text-gray-300 uppercase tracking-[0.3em] text-lg mb-4">
-              Gecenin Kazananı
-            </p>
-            <p className="font-display text-6xl font-extrabold text-white mb-6 winner-glow">
+            <div className="jukebox-strip py-2 max-w-xl mx-auto mb-4">
+              <p className="font-label text-brass-light text-lg">
+                ★ Gecenin Kazananı ★
+              </p>
+            </div>
+            <p className="font-display text-7xl uppercase text-cream mb-6 winner-glow">
               {settings?.currentApplicantName}
             </p>
             {scoreVisible && (
               <div className="score-pop">
-                <p className="text-gray-300 uppercase tracking-widest text-sm mb-2">
-                  Puan
-                </p>
-                <span className="font-display text-[120px] leading-none font-black neon-text-gold">
+                <span className="font-display text-[160px] leading-none neon-text-gold">
                   {settings?.currentScore}
                 </span>
-                <span className="font-display text-3xl text-gray-400 font-bold ml-2">
+                <span className="font-display text-4xl text-cream-300 ml-3">
                   / 10
                 </span>
               </div>

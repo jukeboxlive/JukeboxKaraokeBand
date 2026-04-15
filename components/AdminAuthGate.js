@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Logo from "@/components/Logo";
 
 const AUTH_KEY = "karaoke_admin";
 
@@ -41,17 +42,24 @@ export default function AdminAuthGate({ children }) {
 
   if (checking) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <p className="text-gray-400 animate-pulse">Yükleniyor...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="font-label text-cream-300 animate-pulse tracking-widest">
+          Yükleniyor...
+        </p>
       </div>
     );
   }
 
   if (!authed) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4">
-        <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-4">
-          <h1 className="heading-primary neon-text-cyan text-center">Admin</h1>
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="glass p-8 w-full max-w-sm space-y-5 rounded-2xl">
+          <div className="flex flex-col items-center gap-3">
+            <Logo variant="circle" size={110} priority />
+            <div className="jukebox-strip py-1 w-full text-center">
+              <p className="font-label text-sm">Admin Girişi</p>
+            </div>
+          </div>
           <input
             type="password"
             value={password}
@@ -62,12 +70,14 @@ export default function AdminAuthGate({ children }) {
             autoFocus
           />
           {error && (
-            <p className="text-red-400 text-sm text-center">{error}</p>
+            <p className="text-red-300 text-sm text-center font-label tracking-widest">
+              {error}
+            </p>
           )}
           <button
             onClick={handleLogin}
             disabled={submitting}
-            className="btn-cyan w-full"
+            className="btn-primary"
           >
             {submitting ? "Kontrol..." : "Giriş"}
           </button>

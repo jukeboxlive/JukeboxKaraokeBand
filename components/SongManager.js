@@ -9,7 +9,7 @@ const EMPTY_FORM = { title: "", artist: "", genre: "", lyrics: "" };
 
 function SongForm({ form, setForm, onSave, onCancel, submitLabel, error }) {
   return (
-    <div className="p-4 rounded-xl bg-white/5 border border-cyan-500/20 space-y-3">
+    <div className="p-4 rounded-xl bg-navy-800/60 border border-cream-300/25 space-y-3">
       <input
         type="text"
         value={form.title}
@@ -43,12 +43,16 @@ function SongForm({ form, setForm, onSave, onCancel, submitLabel, error }) {
         rows={4}
         className="input-field resize-none"
       />
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && (
+        <p className="text-red-300 text-sm font-label tracking-widest">
+          {error}
+        </p>
+      )}
       <div className="flex gap-2">
         <button onClick={onCancel} className="btn-secondary flex-1">
           İptal
         </button>
-        <button onClick={onSave} className="btn-cyan flex-1">
+        <button onClick={onSave} className="btn-cream flex-1">
           {submitLabel}
         </button>
       </div>
@@ -142,8 +146,8 @@ export default function SongManager() {
   return (
     <div className="glass rounded-2xl p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-display text-lg font-semibold text-white">
-          Şarkılar ({activeSongs.length})
+        <h2 className="section-title">
+          Şarkılar <span className="text-brass-light ml-1">({activeSongs.length})</span>
         </h2>
         <button onClick={startAdd} className="btn-secondary">
           {addingNew ? "İptal" : "+ Şarkı Ekle"}
@@ -163,7 +167,7 @@ export default function SongManager() {
         </div>
       )}
 
-      <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+      <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
         {activeSongs.map((song) =>
           editingSongId === song.id ? (
             <SongForm
@@ -178,32 +182,32 @@ export default function SongManager() {
           ) : (
             <div
               key={song.id}
-              className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.05] group"
+              className="flex items-center gap-3 p-3 rounded-lg bg-cream/5 hover:bg-cream/10 border border-cream-300/10 group transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-white text-sm font-semibold truncate">
+                <p className="text-cream text-sm font-semibold truncate">
                   {song.title}
                 </p>
-                <p className="text-xs text-gray-400 truncate">
+                <p className="text-xs text-cream-300 italic truncate">
                   {song.artist}
                   {song.genre && ` · ${song.genre}`}
                 </p>
               </div>
               <button
                 onClick={() => startEdit(song)}
-                className="text-xs text-gray-500 hover:text-cyan-400 transition-colors"
+                className="text-xs font-label tracking-widest text-cream-300 hover:text-brass-light transition-colors"
               >
                 Düzenle
               </button>
               <button
                 onClick={() => handleToggleActive(song)}
-                className="text-xs text-gray-500 hover:text-yellow-400 transition-colors"
+                className="text-xs font-label tracking-widest text-cream-300 hover:text-brass-light transition-colors"
               >
                 Kaldır
               </button>
               <button
                 onClick={() => handleHardDelete(song)}
-                className="text-xs text-gray-500 hover:text-red-500 transition-colors"
+                className="text-xs font-label tracking-widest text-cream-300 hover:text-jukebox-red-light transition-colors"
               >
                 Sil
               </button>
@@ -213,30 +217,30 @@ export default function SongManager() {
       </div>
 
       {inactiveSongs.length > 0 && (
-        <div className="mt-4">
-          <p className="text-xs text-gray-500 mb-2">
-            Pasif şarkılar ({inactiveSongs.length})
+        <div className="mt-6">
+          <p className="font-label text-cream-300/70 text-xs mb-2">
+            Pasif Şarkılar ({inactiveSongs.length})
           </p>
           <div className="space-y-1">
             {inactiveSongs.map((song) => (
               <div
                 key={song.id}
-                className="flex items-center gap-3 p-2 rounded-lg opacity-50"
+                className="flex items-center gap-3 p-2 rounded-lg opacity-50 bg-cream/3"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-gray-400 text-sm truncate">
+                  <p className="text-cream-300 text-sm truncate">
                     {song.title} – {song.artist}
                   </p>
                 </div>
                 <button
                   onClick={() => handleToggleActive(song)}
-                  className="text-xs text-green-400 hover:text-green-300 transition-colors"
+                  className="text-xs font-label tracking-widest text-brass-light hover:text-brass transition-colors"
                 >
                   Aktifleştir
                 </button>
                 <button
                   onClick={() => handleHardDelete(song)}
-                  className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                  className="text-xs font-label tracking-widest text-jukebox-red-light hover:text-red-300 transition-colors"
                 >
                   Sil
                 </button>

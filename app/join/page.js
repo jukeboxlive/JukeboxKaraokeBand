@@ -11,6 +11,7 @@ import SongSelect from "@/components/SongSelect";
 import ApplicantForm from "@/components/ApplicantForm";
 import LyricsView from "@/components/LyricsView";
 import VoteModal from "@/components/VoteModal";
+import Logo from "@/components/Logo";
 
 export default function JoinPage() {
   const settings = useSettings();
@@ -69,26 +70,37 @@ export default function JoinPage() {
 
   if (!ready) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-        <p className="text-gray-400 animate-pulse">Yükleniyor...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="font-label text-cream-300 animate-pulse tracking-widest">
+          Yükleniyor...
+        </p>
       </div>
     );
   }
 
   if (!settings?.isLive) {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4">
-        <div className="text-center space-y-4">
-          <p className="font-display text-4xl font-bold neon-text-cyan">KARAOKE LIVE</p>
-          <p className="text-gray-400 text-lg">Etkinlik henüz başlamadı</p>
-          <p className="text-gray-600 text-sm">Birazdan tekrar dene</p>
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center space-y-5 max-w-sm">
+          <div className="flex justify-center">
+            <Logo variant="circle" size={180} priority />
+          </div>
+          <div className="jukebox-strip py-1">
+            <p className="font-label text-sm">Sahne Şu An Kapalı</p>
+          </div>
+          <p className="jukebox-artist text-cream-300 mt-2">
+            Etkinlik henüz başlamadı. Birazdan tekrar dene.
+          </p>
+          <a href="/istek" className="inline-block">
+            <span className="btn-secondary">İstek Bırak →</span>
+          </a>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-dark-900 relative">
+    <div className="min-h-screen relative">
       {view === "select-song" && (
         <SongSelect
           onSelect={handleSongSelect}
@@ -122,12 +134,10 @@ export default function JoinPage() {
             : "fab--inactive"
         }`}
       >
-        ⭐
+        <span>★</span>
       </button>
 
-      {showToast && (
-        <div className="toast">Oylama şu an aktif değil</div>
-      )}
+      {showToast && <div className="toast">Oylama Şu An Kapalı</div>}
 
       <VoteModal
         visible={showVoteModal}

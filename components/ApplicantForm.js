@@ -83,11 +83,9 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
   if (cooldown && !cooldown.canApply) {
     return (
       <div className="page-container">
-        <div className="glass rounded-2xl p-6 text-center space-y-4">
-          <p className="font-display text-xl font-bold text-white">
-            Biraz Bekle
-          </p>
-          <p className="text-gray-400 text-sm">
+        <div className="paper-card p-6 text-center space-y-4">
+          <p className="font-display text-2xl uppercase">Biraz Bekle</p>
+          <p className="jukebox-artist text-cream-700">
             {cooldown.remainingMinutes} dakika sonra tekrar başvurabilirsin.
           </p>
           <button onClick={onBack} className="btn-secondary">
@@ -104,19 +102,17 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
         ← Şarkı Seçimine Dön
       </button>
 
-      <div className="glass rounded-2xl p-4 mb-4">
-        <p className="text-sm text-gray-400">Seçilen şarkı</p>
-        <p className="font-display font-bold neon-text-cyan">{song?.title}</p>
-        <p className="text-sm text-gray-400">{song?.artist}</p>
+      <div className="paper-card p-4 mb-4">
+        <p className="jukebox-meta">Seçilen Şarkı</p>
+        <p className="song-card__title mt-1">{song?.title}</p>
+        <p className="song-card__artist">{song?.artist}</p>
       </div>
 
-      <div className="glass rounded-2xl p-6 space-y-4">
-        <h2 className="font-display text-lg font-semibold text-white">
-          Bilgilerini Gir
-        </h2>
+      <div className="glass p-6 space-y-4">
+        <h2 className="section-title">Bilgilerini Gir</h2>
 
         <div>
-          <label className="field-label">İsim *</label>
+          <label className="field-label">İsim</label>
           <input
             type="text"
             value={form.name}
@@ -128,7 +124,7 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
         </div>
 
         <div>
-          <label className="field-label">Soyisim *</label>
+          <label className="field-label">Soyisim</label>
           <input
             type="text"
             value={form.surname}
@@ -140,9 +136,9 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
         </div>
 
         <div>
-          <label className="field-label">Instagram</label>
+          <label className="field-label">Instagram (opsiyonel)</label>
           <div className="relative flex items-center">
-            <span className="absolute left-3 text-gray-500 text-sm pointer-events-none">
+            <span className="absolute left-3 text-cream-300 text-sm pointer-events-none">
               @
             </span>
             <input
@@ -161,9 +157,10 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
             type="checkbox"
             checked={form.kvkk}
             onChange={(e) => setForm({ ...form, kvkk: e.target.checked })}
-            className="mt-1 w-5 h-5 rounded accent-cyan-400"
+            className="mt-1 w-5 h-5 rounded accent-jukebox-red"
+            style={{ accentColor: "#c4302a" }}
           />
-          <span className="text-xs text-gray-400 leading-relaxed">
+          <span className="text-xs text-cream-300 leading-relaxed">
             KVKK Aydınlatma Metni'ni okudum ve kişisel verilerimin işlenmesini
             kabul ediyorum.
           </span>
@@ -171,7 +168,9 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
       </div>
 
       {error && (
-        <p className="text-red-400 text-sm text-center mt-3">{error}</p>
+        <p className="text-red-300 text-sm text-center mt-3 font-label tracking-widest">
+          {error}
+        </p>
       )}
 
       <button

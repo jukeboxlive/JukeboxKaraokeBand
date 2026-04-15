@@ -1,28 +1,46 @@
 import "./globals.css";
-import { Outfit, DM_Sans } from "next/font/google";
+import { Abril_Fatface, Bebas_Neue, Playfair_Display, Inter } from "next/font/google";
 import { StoreProvider } from "@/lib/store";
 
-const outfit = Outfit({
+const abril = Abril_Fatface({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  weight: "400",
+  variable: "--font-abril",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const bebas = Bebas_Neue({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  weight: "400",
+  variable: "--font-bebas",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
   display: "swap",
 });
 
 export const metadata = {
-  title: "Karaoke Live",
-  description: "Canlı karaoke oylama platformu",
+  title: "Jukebox Live — Karaoke Band",
+  description: "Canlı karaoke. Şarkını seç, sıraya gir, sahneyi al.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="tr" className={`${outfit.variable} ${dmSans.variable}`}>
-      <body className="min-h-screen bg-dark-900 text-white font-body">
+    <html
+      lang="tr"
+      className={`${abril.variable} ${bebas.variable} ${playfair.variable} ${inter.variable}`}
+    >
+      <body className="min-h-screen bg-navy-900 text-cream-200 font-body antialiased">
+        <div className="app-grain" aria-hidden />
         <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
