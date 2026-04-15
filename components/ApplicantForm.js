@@ -118,7 +118,7 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
         <div>
           <label className="field-label">Instagram</label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
               @
             </span>
             <input
@@ -127,7 +127,7 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
               onChange={(e) => setForm({ ...form, instagram: e.target.value })}
               placeholder="kullaniciadi"
               maxLength={MAX_INSTAGRAM_LENGTH}
-              className="input-field pl-9"
+              className="input-field pl-7"
             />
           </div>
         </div>

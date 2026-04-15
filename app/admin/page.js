@@ -1,9 +1,21 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSettings, useQueue, useAllQueue, useVoteCount, useClientUrl } from "@/lib/hooks";
 import { useStore } from "@/lib/store";
 import QRCode from "@/components/QRCode";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+
+function GripIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+      <circle cx="5" cy="3" r="1.5" />
+      <circle cx="11" cy="3" r="1.5" />
+      <circle cx="5" cy="8" r="1.5" />
+      <circle cx="11" cy="8" r="1.5" />
+      <circle cx="5" cy="13" r="1.5" />
+      <circle cx="11" cy="13" r="1.5" />
+    </svg>
+  );
+}
 
 export default function AdminPage() {
   const [isAuthed, setIsAuthed] = useState(false);
@@ -16,6 +28,11 @@ export default function AdminPage() {
   const voteCount = useVoteCount();
   const { actions } = useStore();
   const joinUrl = useClientUrl("/join");
+
+  // drag state
+  const dragItem = useRef(null);
+  const dragOverItem = useRef(null);
+  const [draggingIdx, setDraggingIdx] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined" && sessionStorage.getItem("karaoke_admin") === "true")
@@ -81,11 +98,21 @@ export default function AdminPage() {
   const onStage = queue.find((a) => a.status === "on-stage");
   const nextUp = waitingQueue[0];
 
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-    const from = result.source.index;
-    const to = result.destination.index;
-    if (from === to) return;
+  const handleDragStart = (idx) => {
+    dragItem.current = idx;
+    setDraggingIdx(idx);
+  };
+
+  const handleDragEnter = (idx) => {
+    dragOverItem.current = idx;
+  };
+
+  const handleDragEnd = () => {
+    const from = dragItem.current;
+    const to = dragOverItem.current;
+    setDraggingIdx(null);
+
+    if (from === null || to === null || from === to) return;
 
     const reordered = [...waitingQueue];
     const [moved] = reordered.splice(from, 1);
@@ -93,6 +120,9 @@ export default function AdminPage() {
 
     const orderedIds = reordered.map((a) => a.id);
     safeAction(() => actions.reorderQueue(orderedIds));
+
+    dragItem.current = null;
+    dragOverItem.current = null;
   };
 
   return (
@@ -248,66 +278,44 @@ export default function AdminPage() {
               {waitingQueue.length === 0 ? (
                 <p className="empty-state py-8">Sırada kimse yok</p>
               ) : (
-                <DragDropContext onDragEnd={handleDragEnd}>
-                  <Droppable droppableId="queue">
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className="space-y-2"
-                      >
-                        {waitingQueue.map((a, i) => (
-                          <Draggable key={a.id} draggableId={a.id} index={i}>
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                className={`queue-item group ${snapshot.isDragging ? "queue-item--dragging" : ""}`}
-                              >
-                                <span
-                                  {...provided.dragHandleProps}
-                                  className="drag-handle"
-                                  title="Sürükle"
-                                >
-                                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                                    <circle cx="5" cy="3" r="1.5" />
-                                    <circle cx="11" cy="3" r="1.5" />
-                                    <circle cx="5" cy="8" r="1.5" />
-                                    <circle cx="11" cy="8" r="1.5" />
-                                    <circle cx="5" cy="13" r="1.5" />
-                                    <circle cx="11" cy="13" r="1.5" />
-                                  </svg>
-                                </span>
-                                <span className="font-display font-bold text-gray-500 w-6">
-                                  {i + 1}
-                                </span>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-white text-sm font-semibold truncate">
-                                    {a.name}{" "}
-                                    <span className="text-gray-500">{a.surname}</span>
-                                  </p>
-                                  <p className="text-xs text-gray-400 truncate">
-                                    {a.songTitle} – {a.songArtist}
-                                  </p>
-                                  {a.instagram && (
-                                    <p className="text-xs neon-text-magenta">@{a.instagram}</p>
-                                  )}
-                                </div>
-                                <button
-                                  onClick={() => safeAction(() => actions.updateApplicantStatus(a.id, "cancelled"))}
-                                  className="queue-item__cancel"
-                                >
-                                  İptal
-                                </button>
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
+                <div className="space-y-2">
+                  {waitingQueue.map((a, i) => (
+                    <div
+                      key={a.id}
+                      draggable
+                      onDragStart={() => handleDragStart(i)}
+                      onDragEnter={() => handleDragEnter(i)}
+                      onDragEnd={handleDragEnd}
+                      onDragOver={(e) => e.preventDefault()}
+                      className={`queue-item group ${draggingIdx === i ? "queue-item--dragging" : ""}`}
+                    >
+                      <span className="drag-handle">
+                        <GripIcon />
+                      </span>
+                      <span className="font-display font-bold text-gray-500 w-6">
+                        {i + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white text-sm font-semibold truncate">
+                          {a.name}{" "}
+                          <span className="text-gray-500">{a.surname}</span>
+                        </p>
+                        <p className="text-xs text-gray-400 truncate">
+                          {a.songTitle} – {a.songArtist}
+                        </p>
+                        {a.instagram && (
+                          <p className="text-xs neon-text-magenta">@{a.instagram}</p>
+                        )}
                       </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
+                      <button
+                        onClick={() => safeAction(() => actions.updateApplicantStatus(a.id, "cancelled"))}
+                        className="queue-item__cancel"
+                      >
+                        İptal
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
