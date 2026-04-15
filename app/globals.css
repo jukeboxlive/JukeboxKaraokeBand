@@ -92,6 +92,9 @@ body {
   border-color: #00f0ff;
   outline: none;
 }
+.input-field.has-icon {
+  padding-left: 2.25rem;
+}
 
 /* buttons */
 .btn-primary {

@@ -135,7 +135,7 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
               onChange={(e) => setForm({ ...form, instagram: e.target.value })}
               placeholder="kullaniciadi"
               maxLength={MAX_INSTAGRAM_LENGTH}
-              className="input-field pl-9 w-full"
+              className="input-field has-icon w-full"
             />
           </div>
         </div>
