@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSettings, useQueue, useAllQueue, useVoteCount, useClientUrl } from "@/lib/hooks";
 import { useStore } from "@/lib/store";
 import QRCode from "@/components/QRCode";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 export default function AdminPage() {
   const [isAuthed, setIsAuthed] = useState(false);
@@ -51,7 +52,6 @@ export default function AdminPage() {
     }
   };
 
-  // ── LOGIN VIEW ──
   if (!isAuthed) {
     return (
       <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4">
@@ -76,16 +76,29 @@ export default function AdminPage() {
     );
   }
 
-  // ── ADMIN DASHBOARD ──
   const phase = settings?.phase || "idle";
   const waitingQueue = queue.filter((a) => a.status === "waiting");
   const onStage = queue.find((a) => a.status === "on-stage");
   const nextUp = waitingQueue[0];
 
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    const from = result.source.index;
+    const to = result.destination.index;
+    if (from === to) return;
+
+    const reordered = [...waitingQueue];
+    const [moved] = reordered.splice(from, 1);
+    reordered.splice(to, 0, moved);
+
+    const orderedIds = reordered.map((a) => a.id);
+    safeAction(() => actions.reorderQueue(orderedIds));
+  };
+
   return (
     <div className="min-h-screen bg-dark-900 p-4 md:p-8">
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* HEADER */}
+        {/* header */}
         <div className="flex items-center justify-between">
           <h1 className="heading-primary neon-text-cyan">Admin Panel</h1>
           <div className="flex items-center gap-3">
@@ -101,14 +114,13 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* ACTION ERROR */}
         {actionError && (
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 text-red-400 text-sm text-center">
             {actionError}
           </div>
         )}
 
-        {/* STATUS BAR */}
+        {/* status */}
         <div className="glass rounded-xl p-4 flex items-center justify-between">
           <span className="text-sm text-gray-400">
             Durum:{" "}
@@ -128,7 +140,7 @@ export default function AdminPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* CONTROLS */}
+          {/* controls */}
           <div className="space-y-4">
             <div className="glass rounded-2xl p-6 space-y-3">
               <h2 className="font-display text-lg font-semibold text-white">Kontroller</h2>
@@ -210,7 +222,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* QUEUE */}
+          {/* queue */}
           <div className="lg:col-span-2">
             <div className="glass rounded-2xl p-6">
               <h2 className="font-display text-lg font-semibold text-white mb-4">
@@ -236,39 +248,72 @@ export default function AdminPage() {
               {waitingQueue.length === 0 ? (
                 <p className="empty-state py-8">Sırada kimse yok</p>
               ) : (
-                <div className="space-y-2">
-                  {waitingQueue.map((a, i) => (
-                    <div key={a.id} className="queue-item group">
-                      <span className="font-display font-bold text-gray-500 w-6">
-                        {i + 1}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-semibold truncate">
-                          {a.name}{" "}
-                          <span className="text-gray-500">{a.surname}</span>
-                        </p>
-                        <p className="text-xs text-gray-400 truncate">
-                          {a.songTitle} – {a.songArtist}
-                        </p>
-                        {a.instagram && (
-                          <p className="text-xs neon-text-magenta">@{a.instagram}</p>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => safeAction(() => actions.updateApplicantStatus(a.id, "cancelled"))}
-                        className="queue-item__cancel"
+                <DragDropContext onDragEnd={handleDragEnd}>
+                  <Droppable droppableId="queue">
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className="space-y-2"
                       >
-                        İptal
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                        {waitingQueue.map((a, i) => (
+                          <Draggable key={a.id} draggableId={a.id} index={i}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                className={`queue-item group ${snapshot.isDragging ? "queue-item--dragging" : ""}`}
+                              >
+                                <span
+                                  {...provided.dragHandleProps}
+                                  className="drag-handle"
+                                  title="Sürükle"
+                                >
+                                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                    <circle cx="5" cy="3" r="1.5" />
+                                    <circle cx="11" cy="3" r="1.5" />
+                                    <circle cx="5" cy="8" r="1.5" />
+                                    <circle cx="11" cy="8" r="1.5" />
+                                    <circle cx="5" cy="13" r="1.5" />
+                                    <circle cx="11" cy="13" r="1.5" />
+                                  </svg>
+                                </span>
+                                <span className="font-display font-bold text-gray-500 w-6">
+                                  {i + 1}
+                                </span>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-white text-sm font-semibold truncate">
+                                    {a.name}{" "}
+                                    <span className="text-gray-500">{a.surname}</span>
+                                  </p>
+                                  <p className="text-xs text-gray-400 truncate">
+                                    {a.songTitle} – {a.songArtist}
+                                  </p>
+                                  {a.instagram && (
+                                    <p className="text-xs neon-text-magenta">@{a.instagram}</p>
+                                  )}
+                                </div>
+                                <button
+                                  onClick={() => safeAction(() => actions.updateApplicantStatus(a.id, "cancelled"))}
+                                  className="queue-item__cancel"
+                                >
+                                  İptal
+                                </button>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
               )}
             </div>
           </div>
         </div>
 
-        {/* QR CODE */}
+        {/* qr */}
         <div className="glass rounded-2xl p-6 text-center">
           <h2 className="font-display text-lg font-semibold text-white mb-4">
             Katılım QR Kodu

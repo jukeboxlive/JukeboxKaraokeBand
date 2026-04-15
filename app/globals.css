@@ -362,6 +362,28 @@ body {
 .group:hover .queue-item__cancel {
   opacity: 1;
 }
+.queue-item--dragging {
+  background: #1a1a2e;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 0.5rem;
+}
+
+/* drag handle */
+.drag-handle {
+  color: #4b5563;
+  cursor: grab;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.drag-handle:hover {
+  color: #00f0ff;
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
 
 /* tv */
 .tv-screen {
