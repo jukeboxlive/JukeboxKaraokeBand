@@ -49,10 +49,7 @@ service cloud.firestore {
                     && request.resource.data.title.size() <= 100
                     && request.resource.data.artist is string
                     && request.resource.data.artist.size() > 0
-                    && request.resource.data.artist.size() <= 100
-                    && request.resource.data.requesterName is string
-                    && request.resource.data.requesterName.size() > 0
-                    && request.resource.data.requesterName.size() <= 50;
+                    && request.resource.data.artist.size() <= 100;
       allow update, delete: if true;
     }
   }

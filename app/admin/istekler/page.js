@@ -124,17 +124,23 @@ function RequestsDashboard() {
                     </span>
                   </div>
 
-                  <div className="text-sm text-gray-300">
-                    <span className="text-gray-500">İsteyen:</span>{" "}
-                    <span className="font-semibold text-white">
-                      {req.requesterName}
-                    </span>
-                    {req.instagram && (
-                      <span className="neon-text-magenta ml-2">
-                        @{req.instagram}
-                      </span>
-                    )}
-                  </div>
+                  {(req.requesterName || req.instagram) && (
+                    <div className="text-sm text-gray-300">
+                      {req.requesterName && (
+                        <>
+                          <span className="text-gray-500">İsteyen:</span>{" "}
+                          <span className="font-semibold text-white">
+                            {req.requesterName}
+                          </span>
+                        </>
+                      )}
+                      {req.instagram && (
+                        <span className="neon-text-magenta ml-2">
+                          @{req.instagram}
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   {req.note && (
                     <p className="text-sm text-gray-400 italic border-l-2 border-cyan-500/30 pl-3">

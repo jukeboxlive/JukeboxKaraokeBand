@@ -5,12 +5,63 @@ import { useStore } from "@/lib/store";
 
 const GENRES = ["Pop", "Rock", "Jazz", "R&B", "Hip-Hop", "Elektronik", "Türkü", "Arabesk"];
 
+const EMPTY_FORM = { title: "", artist: "", genre: "", lyrics: "" };
+
+function SongForm({ form, setForm, onSave, onCancel, submitLabel, error }) {
+  return (
+    <div className="p-4 rounded-xl bg-white/5 border border-cyan-500/20 space-y-3">
+      <input
+        type="text"
+        value={form.title}
+        onChange={(e) => setForm({ ...form, title: e.target.value })}
+        placeholder="Şarkı adı *"
+        className="input-field"
+      />
+      <input
+        type="text"
+        value={form.artist}
+        onChange={(e) => setForm({ ...form, artist: e.target.value })}
+        placeholder="Sanatçı *"
+        className="input-field"
+      />
+      <select
+        value={form.genre}
+        onChange={(e) => setForm({ ...form, genre: e.target.value })}
+        className="input-field"
+      >
+        <option value="">Tür seçin</option>
+        {GENRES.map((g) => (
+          <option key={g} value={g}>
+            {g}
+          </option>
+        ))}
+      </select>
+      <textarea
+        value={form.lyrics}
+        onChange={(e) => setForm({ ...form, lyrics: e.target.value })}
+        placeholder="Şarkı sözleri"
+        rows={4}
+        className="input-field resize-none"
+      />
+      {error && <p className="text-red-400 text-sm">{error}</p>}
+      <div className="flex gap-2">
+        <button onClick={onCancel} className="btn-secondary flex-1">
+          İptal
+        </button>
+        <button onClick={onSave} className="btn-cyan flex-1">
+          {submitLabel}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function SongManager() {
   const { actions } = useStore();
   const [songs, setSongs] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [editingSong, setEditingSong] = useState(null);
-  const [form, setForm] = useState({ title: "", artist: "", genre: "", lyrics: "" });
+  const [addingNew, setAddingNew] = useState(false);
+  const [editingSongId, setEditingSongId] = useState(null);
+  const [form, setForm] = useState(EMPTY_FORM);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -18,22 +69,34 @@ export default function SongManager() {
     return () => unsub();
   }, []);
 
-  const resetForm = () => {
-    setForm({ title: "", artist: "", genre: "", lyrics: "" });
-    setEditingSong(null);
-    setShowForm(false);
+  const closeAllForms = () => {
+    setAddingNew(false);
+    setEditingSongId(null);
+    setForm(EMPTY_FORM);
     setError("");
   };
 
-  const handleEdit = (song) => {
+  const startAdd = () => {
+    if (addingNew) {
+      closeAllForms();
+      return;
+    }
+    setEditingSongId(null);
+    setForm(EMPTY_FORM);
+    setError("");
+    setAddingNew(true);
+  };
+
+  const startEdit = (song) => {
+    setAddingNew(false);
     setForm({
       title: song.title || "",
       artist: song.artist || "",
       genre: song.genre || "",
       lyrics: song.lyrics || "",
     });
-    setEditingSong(song);
-    setShowForm(true);
+    setError("");
+    setEditingSongId(song.id);
   };
 
   const handleSave = async () => {
@@ -50,12 +113,12 @@ export default function SongManager() {
         lyrics: form.lyrics.trim(),
       };
 
-      if (editingSong) {
-        await actions.updateSong(editingSong.id, data);
+      if (editingSongId) {
+        await actions.updateSong(editingSongId, data);
       } else {
         await actions.addSong(data);
       }
-      resetForm();
+      closeAllForms();
     } catch {
       setError("Bir hata oluştu.");
     }
@@ -82,94 +145,71 @@ export default function SongManager() {
         <h2 className="font-display text-lg font-semibold text-white">
           Şarkılar ({activeSongs.length})
         </h2>
-        <button
-          onClick={() => {
-            resetForm();
-            setShowForm(!showForm);
-          }}
-          className="btn-secondary"
-        >
-          {showForm ? "İptal" : "+ Şarkı Ekle"}
+        <button onClick={startAdd} className="btn-secondary">
+          {addingNew ? "İptal" : "+ Şarkı Ekle"}
         </button>
       </div>
 
-      {showForm && (
-        <div className="mb-4 p-4 rounded-xl bg-white/5 space-y-3">
-          <input
-            type="text"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            placeholder="Şarkı adı *"
-            className="input-field"
+      {addingNew && (
+        <div className="mb-4">
+          <SongForm
+            form={form}
+            setForm={setForm}
+            onSave={handleSave}
+            onCancel={closeAllForms}
+            submitLabel="Ekle"
+            error={error}
           />
-          <input
-            type="text"
-            value={form.artist}
-            onChange={(e) => setForm({ ...form, artist: e.target.value })}
-            placeholder="Sanatçı *"
-            className="input-field"
-          />
-          <select
-            value={form.genre}
-            onChange={(e) => setForm({ ...form, genre: e.target.value })}
-            className="input-field"
-          >
-            <option value="">Tür seçin</option>
-            {GENRES.map((g) => (
-              <option key={g} value={g}>
-                {g}
-              </option>
-            ))}
-          </select>
-          <textarea
-            value={form.lyrics}
-            onChange={(e) => setForm({ ...form, lyrics: e.target.value })}
-            placeholder="Şarkı sözleri"
-            rows={4}
-            className="input-field resize-none"
-          />
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          <button onClick={handleSave} className="btn-cyan w-full">
-            {editingSong ? "Güncelle" : "Ekle"}
-          </button>
         </div>
       )}
 
-      <div className="space-y-2 max-h-[40vh] overflow-y-auto">
-        {activeSongs.map((song) => (
-          <div
-            key={song.id}
-            className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.05] group"
-          >
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-semibold truncate">
-                {song.title}
-              </p>
-              <p className="text-xs text-gray-400 truncate">
-                {song.artist}
-                {song.genre && ` · ${song.genre}`}
-              </p>
+      <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+        {activeSongs.map((song) =>
+          editingSongId === song.id ? (
+            <SongForm
+              key={song.id}
+              form={form}
+              setForm={setForm}
+              onSave={handleSave}
+              onCancel={closeAllForms}
+              submitLabel="Güncelle"
+              error={error}
+            />
+          ) : (
+            <div
+              key={song.id}
+              className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.05] group"
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-white text-sm font-semibold truncate">
+                  {song.title}
+                </p>
+                <p className="text-xs text-gray-400 truncate">
+                  {song.artist}
+                  {song.genre && ` · ${song.genre}`}
+                </p>
+              </div>
+              <button
+                onClick={() => startEdit(song)}
+                className="text-xs text-gray-500 hover:text-cyan-400 transition-colors"
+              >
+                Düzenle
+              </button>
+              <button
+                onClick={() => handleToggleActive(song)}
+                className="text-xs text-gray-500 hover:text-yellow-400 transition-colors"
+              >
+                Kaldır
+              </button>
+              <button
+                onClick={() => handleHardDelete(song)}
+                className="text-xs text-gray-500 hover:text-red-500 transition-colors"
+              >
+                Sil
+              </button>
             </div>
-            <button
-              onClick={() => handleEdit(song)}
-              className="text-xs text-gray-500 hover:text-cyan-400 transition-colors"
-            >
-              Düzenle
-            </button>
-            <button
-              onClick={() => handleToggleActive(song)}
-              className="text-xs text-gray-500 hover:text-yellow-400 transition-colors"
-            >
-              Kaldır
-            </button>
-            <button
-              onClick={() => handleHardDelete(song)}
-              className="text-xs text-gray-500 hover:text-red-500 transition-colors"
-            >
-              Sil
-            </button>
-          </div>
-        ))}
+          ),
+        )}
       </div>
 
       {inactiveSongs.length > 0 && (
