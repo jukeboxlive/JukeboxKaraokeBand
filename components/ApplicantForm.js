@@ -34,9 +34,13 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
 
     if (!name || !surname) return setError("İsim ve soyisim zorunlu.");
     if (name.length > MAX_NAME_LENGTH || surname.length > MAX_NAME_LENGTH)
-      return setError(`İsim/soyisim en fazla ${MAX_NAME_LENGTH} karakter olabilir.`);
+      return setError(
+        `İsim/soyisim en fazla ${MAX_NAME_LENGTH} karakter olabilir.`,
+      );
     if (instagram.length > MAX_INSTAGRAM_LENGTH)
-      return setError(`Instagram kullanıcı adı en fazla ${MAX_INSTAGRAM_LENGTH} karakter olabilir.`);
+      return setError(
+        `Instagram kullanıcı adı en fazla ${MAX_INSTAGRAM_LENGTH} karakter olabilir.`,
+      );
     if (!form.kvkk) return setError("KVKK onayı zorunlu.");
     if (submitting) return;
     setError("");
@@ -64,8 +68,12 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
     return (
       <div className="page-container">
         <div className="glass rounded-2xl p-6 text-center space-y-4">
-          <p className="font-display text-xl font-bold text-white">Zaten Sıradasınız</p>
-          <p className="text-gray-400 text-sm">Bu cihazdan daha önce başvuru yapılmış.</p>
+          <p className="font-display text-xl font-bold text-white">
+            Zaten Sıradasınız
+          </p>
+          <p className="text-gray-400 text-sm">
+            Bu cihazdan daha önce başvuru yapılmış.
+          </p>
           <button onClick={onBack} className="btn-secondary">
             Geri Dön
           </button>
@@ -117,17 +125,17 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
 
         <div>
           <label className="field-label">Instagram</label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none">
+          <div className="relative flex items-center">
+            <span className="absolute left-3 text-gray-500 text-sm pointer-events-none">
               @
             </span>
             <input
               type="text"
-              value={form.instagram}
+              value={form.instagram || ""}
               onChange={(e) => setForm({ ...form, instagram: e.target.value })}
               placeholder="kullaniciadi"
               maxLength={MAX_INSTAGRAM_LENGTH}
-              className="input-field pl-7"
+              className="input-field pl-9 w-full"
             />
           </div>
         </div>
