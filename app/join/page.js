@@ -1,6 +1,12 @@
 "use client";
 import { useState } from "react";
-import { useSettings, useReady } from "@/lib/hooks";
+import {
+  useSettings,
+  useReady,
+  useAllQueue,
+  useSongs,
+  useDeviceId,
+} from "@/lib/hooks";
 import SongSelect from "@/components/SongSelect";
 import ApplicantForm from "@/components/ApplicantForm";
 import LyricsView from "@/components/LyricsView";
@@ -9,15 +15,26 @@ import VoteModal from "@/components/VoteModal";
 export default function JoinPage() {
   const settings = useSettings();
   const ready = useReady();
+  const queue = useAllQueue();
+  const songs = useSongs();
+  const deviceId = useDeviceId();
 
-  // View controller state
-  const [view, setView] = useState("select-song"); // select-song | form | lyrics
+  const [view, setView] = useState("select-song");
   const [selectedSong, setSelectedSong] = useState(null);
   const [cachedLyrics, setCachedLyrics] = useState("");
 
-  // Vote modal state
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
+
+  // Detect this device's active (waiting/on-stage) applicant in the current stage
+  const myApplicant =
+    deviceId && queue.length
+      ? queue.find(
+          (a) =>
+            a.deviceId === deviceId &&
+            (a.status === "waiting" || a.status === "on-stage"),
+        )
+      : null;
 
   const handleSongSelect = (song) => {
     setSelectedSong(song);
@@ -26,6 +43,18 @@ export default function JoinPage() {
 
   const handleFormSubmitted = (applicantId, lyrics) => {
     setCachedLyrics(lyrics);
+    setView("lyrics");
+  };
+
+  const handleViewMyLyrics = () => {
+    if (!myApplicant) return;
+    const song = songs.find((s) => s.id === myApplicant.songId);
+    setSelectedSong({
+      id: myApplicant.songId,
+      title: myApplicant.songTitle,
+      artist: myApplicant.songArtist,
+    });
+    setCachedLyrics(song?.lyrics || "Sözler henüz eklenmemiş.");
     setView("lyrics");
   };
 
@@ -60,8 +89,13 @@ export default function JoinPage() {
 
   return (
     <div className="min-h-screen bg-dark-900 relative">
-      {/* ── VIEW CONTROLLER ── */}
-      {view === "select-song" && <SongSelect onSelect={handleSongSelect} />}
+      {view === "select-song" && (
+        <SongSelect
+          onSelect={handleSongSelect}
+          myApplicant={myApplicant}
+          onViewMyLyrics={handleViewMyLyrics}
+        />
+      )}
 
       {view === "form" && (
         <ApplicantForm
@@ -79,7 +113,6 @@ export default function JoinPage() {
         />
       )}
 
-      {/* ── FAB ── */}
       <button
         onClick={handleFabClick}
         aria-label="Oy ver"
@@ -96,7 +129,6 @@ export default function JoinPage() {
         <div className="toast">Oylama şu an aktif değil</div>
       )}
 
-      {/* ── VOTE MODAL ── */}
       <VoteModal
         visible={showVoteModal}
         onClose={() => setShowVoteModal(false)}

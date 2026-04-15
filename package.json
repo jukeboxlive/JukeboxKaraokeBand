@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "seed": "node scripts/seed-songs.mjs"
+    "start": "next start"
   },
   "dependencies": {
     "firebase": "^12.11.0",

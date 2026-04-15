@@ -4,7 +4,7 @@ import { useSongs, useSongUsageCounts } from "@/lib/hooks";
 
 const MAX_SONG_USAGE = 2;
 
-export default function SongSelect({ onSelect }) {
+export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
   const songs = useSongs();
   const songUsage = useSongUsageCounts();
   const [search, setSearch] = useState("");
@@ -40,6 +40,23 @@ export default function SongSelect({ onSelect }) {
         <h1 className="heading-primary neon-text-cyan">🎤 Karaoke Live</h1>
         <p className="text-gray-500 text-sm mt-1">Şarkını seç, sahneye çık!</p>
       </div>
+
+      {myApplicant && onViewMyLyrics && (
+        <button
+          onClick={onViewMyLyrics}
+          className="w-full mb-4 p-4 rounded-xl bg-gradient-to-r from-cyan-500/20 to-fuchsia-500/20 border border-cyan-500/30 hover:from-cyan-500/30 hover:to-fuchsia-500/30 transition-all text-left"
+        >
+          <p className="text-xs text-cyan-400 uppercase tracking-widest">
+            Sıradasın
+          </p>
+          <p className="font-display font-bold text-white mt-1">
+            {myApplicant.songTitle}
+          </p>
+          <p className="text-xs text-gray-400">
+            {myApplicant.songArtist} · Şarkı sözlerime dön →
+          </p>
+        </button>
+      )}
 
       <div className="mb-4">
         <input

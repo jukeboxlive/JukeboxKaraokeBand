@@ -65,6 +65,14 @@ export default function SongManager() {
     await actions.updateSong(song.id, { isActive: !song.isActive });
   };
 
+  const handleHardDelete = async (song) => {
+    const ok = window.confirm(
+      `"${song.title}" kalıcı olarak silinsin mi? Bu işlem geri alınamaz.`,
+    );
+    if (!ok) return;
+    await actions.deleteSongPermanent(song.id);
+  };
+
   const activeSongs = songs.filter((s) => s.isActive !== false);
   const inactiveSongs = songs.filter((s) => s.isActive === false);
 
@@ -150,9 +158,15 @@ export default function SongManager() {
             </button>
             <button
               onClick={() => handleToggleActive(song)}
-              className="text-xs text-gray-500 hover:text-red-400 transition-colors"
+              className="text-xs text-gray-500 hover:text-yellow-400 transition-colors"
             >
               Kaldır
+            </button>
+            <button
+              onClick={() => handleHardDelete(song)}
+              className="text-xs text-gray-500 hover:text-red-500 transition-colors"
+            >
+              Sil
             </button>
           </div>
         ))}
@@ -179,6 +193,12 @@ export default function SongManager() {
                   className="text-xs text-green-400 hover:text-green-300 transition-colors"
                 >
                   Aktifleştir
+                </button>
+                <button
+                  onClick={() => handleHardDelete(song)}
+                  className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                >
+                  Sil
                 </button>
               </div>
             ))}
