@@ -41,5 +41,19 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+    // Song requests: public create with validation, public read, admin update/delete
+    match /songRequests/{requestId} {
+      allow read: if true;
+      allow create: if request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.title.size() <= 100
+                    && request.resource.data.artist is string
+                    && request.resource.data.artist.size() > 0
+                    && request.resource.data.artist.size() <= 100
+                    && request.resource.data.requesterName is string
+                    && request.resource.data.requesterName.size() > 0
+                    && request.resource.data.requesterName.size() <= 50;
+      allow update, delete: if true;
+    }
   }
 }

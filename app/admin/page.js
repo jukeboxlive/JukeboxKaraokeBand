@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useSettings, useQueue, useAllQueue, useVoteCount, useClientUrl } from "@/lib/hooks";
 import { useStore } from "@/lib/store";
 import QRCode from "@/components/QRCode";
 import SongManager from "@/components/SongManager";
+import AdminAuthGate from "@/components/AdminAuthGate";
 
 function GripIcon() {
   return (
@@ -18,10 +19,7 @@ function GripIcon() {
   );
 }
 
-export default function AdminPage() {
-  const [isAuthed, setIsAuthed] = useState(false);
-  const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
+function AdminDashboard() {
   const [actionError, setActionError] = useState("");
   const settings = useSettings();
   const queue = useQueue();
@@ -30,35 +28,9 @@ export default function AdminPage() {
   const { actions } = useStore();
   const joinUrl = useClientUrl("/join");
 
-  // drag state
   const dragItem = useRef(null);
   const dragOverItem = useRef(null);
   const [draggingIdx, setDraggingIdx] = useState(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem("karaoke_admin") === "true")
-      setIsAuthed(true);
-  }, []);
-
-  const handleLogin = async () => {
-    setLoginError("");
-    try {
-      const res = await fetch("/api/admin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setIsAuthed(true);
-        sessionStorage.setItem("karaoke_admin", "true");
-      } else {
-        setLoginError("Yanlış şifre!");
-      }
-    } catch {
-      setLoginError("Bağlantı hatası. Tekrar deneyin.");
-    }
-  };
 
   const safeAction = async (fn) => {
     setActionError("");
@@ -69,30 +41,6 @@ export default function AdminPage() {
       setTimeout(() => setActionError(""), 4000);
     }
   };
-
-  if (!isAuthed) {
-    return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4">
-        <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-4">
-          <h1 className="heading-primary neon-text-cyan text-center">Admin</h1>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-            placeholder="Şifre"
-            className="input-field"
-          />
-          {loginError && (
-            <p className="text-red-400 text-sm text-center">{loginError}</p>
-          )}
-          <button onClick={handleLogin} className="btn-cyan w-full">
-            Giriş
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const phase = settings?.phase || "idle";
   const waitingQueue = queue.filter((a) => a.status === "waiting");
@@ -130,9 +78,9 @@ export default function AdminPage() {
     <div className="min-h-screen bg-dark-900 p-4 md:p-8">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <h1 className="heading-primary neon-text-cyan">Admin Panel</h1>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <button
               onClick={() =>
                 safeAction(async () => {
@@ -147,6 +95,9 @@ export default function AdminPage() {
             >
               {settings?.isLive ? "CANLI" : "KAPALI"}
             </button>
+            <a href="/admin/istekler" className="btn-secondary">
+              İstekler
+            </a>
             <a href="/tv" target="_blank" className="btn-secondary">
               TV Ekranı
             </a>
@@ -345,5 +296,13 @@ export default function AdminPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <AdminAuthGate>
+      <AdminDashboard />
+    </AdminAuthGate>
   );
 }
