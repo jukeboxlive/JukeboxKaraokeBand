@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSettings, useQueue, useAllQueue, useVoteCount, useClientUrl } from "@/lib/hooks";
 import { useStore } from "@/lib/store";
 import QRCode from "@/components/QRCode";
+import SongManager from "@/components/SongManager";
 
 function GripIcon() {
   return (
@@ -133,7 +134,15 @@ export default function AdminPage() {
           <h1 className="heading-primary neon-text-cyan">Admin Panel</h1>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => safeAction(() => actions.updateSettings({ isLive: !settings?.isLive }))}
+              onClick={() =>
+                safeAction(async () => {
+                  if (settings?.isLive) {
+                    await actions.endStage();
+                  } else {
+                    await actions.createStage();
+                  }
+                })
+              }
               className={`badge ${settings?.isLive ? "badge--live" : "badge--offline"}`}
             >
               {settings?.isLive ? "CANLI" : "KAPALI"}
@@ -320,6 +329,9 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
+
+        {/* songs */}
+        <SongManager />
 
         {/* qr */}
         <div className="glass rounded-2xl p-6 text-center">

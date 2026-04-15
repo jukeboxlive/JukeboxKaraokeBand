@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useDeviceId } from "@/lib/hooks";
+import { useDeviceId, useSettings } from "@/lib/hooks";
 import { useStore } from "@/lib/store";
 
 const MAX_NAME_LENGTH = 50;
@@ -8,6 +8,7 @@ const MAX_INSTAGRAM_LENGTH = 30;
 
 export default function ApplicantForm({ song, onBack, onSubmitted }) {
   const deviceId = useDeviceId();
+  const settings = useSettings();
   const { actions } = useStore();
   const [form, setForm] = useState({
     name: "",
@@ -17,15 +18,22 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
   });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [alreadyApplied, setAlreadyApplied] = useState(false);
+  const [cooldown, setCooldown] = useState(null);
+  const [checking, setChecking] = useState(true);
 
-  // Cihaz bazlı duplicate başvuru kontrolü
   useEffect(() => {
-    if (deviceId) {
-      const applied = localStorage.getItem("karaoke_applied");
-      if (applied === "true") setAlreadyApplied(true);
+    if (deviceId && settings?.currentStageId) {
+      actions
+        .checkCooldown(deviceId, settings.currentStageId)
+        .then((result) => {
+          setCooldown(result);
+          setChecking(false);
+        })
+        .catch(() => setChecking(false));
+    } else if (deviceId) {
+      setChecking(false);
     }
-  }, [deviceId]);
+  }, [deviceId, settings?.currentStageId, actions]);
 
   const handleSubmit = async () => {
     const name = form.name.trim();
@@ -54,25 +62,33 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
         songId: song.id,
         songTitle: song.title,
         songArtist: song.artist,
+        stageId: settings.currentStageId,
         deviceId,
       });
-      localStorage.setItem("karaoke_applied", "true");
       onSubmitted(ref.id, song.lyrics || "Sözler henüz eklenmemiş.");
     } catch (err) {
-      setError("Bir hata oluştu. Tekrar deneyin.");
+      setError(err.message || "Bir hata oluştu. Tekrar deneyin.");
       setSubmitting(false);
     }
   };
 
-  if (alreadyApplied) {
+  if (checking) {
+    return (
+      <div className="page-container">
+        <p className="empty-state animate-pulse">Kontrol ediliyor...</p>
+      </div>
+    );
+  }
+
+  if (cooldown && !cooldown.canApply) {
     return (
       <div className="page-container">
         <div className="glass rounded-2xl p-6 text-center space-y-4">
           <p className="font-display text-xl font-bold text-white">
-            Zaten Sıradasınız
+            Biraz Bekle
           </p>
           <p className="text-gray-400 text-sm">
-            Bu cihazdan daha önce başvuru yapılmış.
+            {cooldown.remainingMinutes} dakika sonra tekrar başvurabilirsin.
           </p>
           <button onClick={onBack} className="btn-secondary">
             Geri Dön
