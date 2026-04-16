@@ -9,24 +9,27 @@ export default function Confetti() {
 
   const particles = useMemo(
     () =>
-      Array.from({ length: 40 }, (_, i) => ({
+      Array.from({ length: 55 }, (_, i) => ({
         id: i,
         left: Math.random() * 100,
-        delay: Math.random() * 2,
-        size: 6 + Math.random() * 8,
+        // Delay 0-3s so particles keep appearing throughout the 5s window
+        delay: Math.random() * 3,
+        // Duration 3.5-5s so they stay visible longer
+        duration: 3.5 + Math.random() * 1.5,
+        size: 7 + Math.random() * 9,
         color: COLORS[i % COLORS.length],
         round: Math.random() > 0.5,
       })),
     [],
   );
 
-  // Animasyon bittikten sonra DOM'dan temizle
+  // Clean up DOM after all animations finish (5s effect + max 3s delay + some buffer)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const timer = setTimeout(() => {
       if (el) el.innerHTML = "";
-    }, 5000); // 3s animasyon + 2s gecikme max
+    }, 9000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -43,6 +46,7 @@ export default function Confetti() {
             backgroundColor: p.color,
             borderRadius: p.round ? "50%" : "2px",
             animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
           }}
         />
       ))}

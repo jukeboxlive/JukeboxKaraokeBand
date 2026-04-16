@@ -81,7 +81,7 @@ function AdminDashboard() {
         {/* header */}
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
-            <Logo variant="square" size={64} priority />
+            <Logo variant="circle" size={64} priority />
             <div>
               <h1 className="heading-primary text-2xl">Admin Panel</h1>
               <p className="font-label text-cream-300 text-xs mt-1">
