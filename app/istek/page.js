@@ -88,11 +88,15 @@ export default function RequestPage() {
       <div className="max-w-md mx-auto">
         <div className="text-center mb-6">
           <BrandHeader size={110} gap="gap-8" className="mb-4" priority />
-          <div className="jukebox-strip">
+          <div className="jukebox-strip mb-3">
             <p className="font-label text-cream-300 text-sm">
               Karaoke Band · Sıra Sende
             </p>
           </div>
+          <p className="jukebox-artist text-cream-300 mt-2 max-w-xs mx-auto leading-relaxed">
+            Söylemek istediğin şarkıyı bize bildir. Listeye alalım, etkinlikte
+            sahneye çık.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="glass p-6 space-y-4 rounded-2xl">
