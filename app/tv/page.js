@@ -40,24 +40,24 @@ export default function TVPage() {
 
       {/*
         ── Header bloğu ──
-        In-flow → içerik asla üste binmez.
-        JB-02: PNG kare (1024×1024) → object-contain ile tam görünür, kırpılmaz.
-        Container kare tutulur: min(300px, 28vh) × min(300px, 28vh)
-        → 1080p TV'de ~300×300, küçük ekranlarda ölçeklenir.
+        In-flow yüksekliği = 380px (wordmark'ın görsel alt sınırı).
+        Logo container'ı 500×500 — header'dan taşar ama alt kısmı
+        siyah/transparan olduğundan screen-blend ile tamamen kaybolur.
+        Böylece content pozisyonu korunur, logo büyür, kırpılmaz.
       */}
       <div
         className="relative z-20 w-full flex-shrink-0"
-        style={{ height: "calc(28px + min(300px, 28vh))" }}
+        style={{ height: 380 }}
       >
-        {/* JB-02 — tam görünür, kırpılmaz */}
+        {/* JB-02 — 500×500, object-contain, tam görünür */}
         <div
           style={{
             position: "absolute",
-            top: 28,
+            top: 20,
             left: "50%",
             transform: "translateX(-50%)",
-            width: "min(300px, 28vh)",
-            height: "min(300px, 28vh)",
+            width: "min(500px, 46vw)",
+            height: "min(500px, 46vw)",
           }}
         >
           <Image
@@ -70,7 +70,7 @@ export default function TVPage() {
           />
         </div>
 
-        {/* Irish Luck — eski yeri: sağ üst köşe, JB-02 ile aynı top */}
+        {/* Irish Luck — eski yeri: sağ üst köşe */}
         <div style={{ position: "absolute", top: 28, right: 40 }}>
           <Image
             src="/logo-venue.png"
@@ -87,7 +87,7 @@ export default function TVPage() {
       {/* ── Ana içerik — header'ın altından biraz boşlukla başlar ── */}
       <div
         className="relative z-10 flex-1 flex items-start justify-center w-full text-center"
-        style={{ paddingTop: "1.5rem", paddingBottom: "2rem" }}
+        style={{ paddingTop: "0.5rem", paddingBottom: "2rem" }}
       >
         <div className="w-full max-w-5xl px-8">
 
