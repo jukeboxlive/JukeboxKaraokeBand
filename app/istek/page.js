@@ -94,8 +94,7 @@ export default function RequestPage() {
             </p>
           </div>
           <p className="jukebox-artist text-cream-300 mt-2 max-w-xs mx-auto leading-relaxed">
-            Söylemek istediğin şarkıyı bize bildir. Listeye alalım, etkinlikte
-            sahneye çık.
+            Söylemek istediğin şarkıyı bize bildir.
           </p>
         </div>
 
