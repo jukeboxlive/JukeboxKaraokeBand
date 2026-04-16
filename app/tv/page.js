@@ -30,15 +30,27 @@ export default function TVPage() {
   const nextPerson = waitingQueue[0];
 
   return (
-    <div className="tv-screen">
+    <div
+      className="tv-screen"
+      style={{ flexDirection: "column", alignItems: "stretch", padding: 0 }}
+    >
       {showConfetti && <Confetti />}
-
       <div className="ambient-glow ambient-glow--cyan" />
       <div className="ambient-glow ambient-glow--magenta" />
 
-      {/* ── JB-02 wordmark — üst merkez, tüm fazlarda sabit ── */}
-      <div className="absolute top-4 left-1/2 z-20" style={{ transform: "translateX(-50%)" }}>
-        <div style={{ width: 880, height: 360, position: "relative" }}>
+      {/* ── Header: JB-02 orta + Irish Luck sağda, aynı satır ── */}
+      <div
+        className="relative z-20 w-full flex items-center justify-center"
+        style={{ paddingTop: "1.5rem", paddingBottom: "0.5rem", flexShrink: 0 }}
+      >
+        {/* JB-02 — responsive 5x, ortalı */}
+        <div
+          style={{
+            width: "clamp(420px, 56vw, 1100px)",
+            height: "clamp(140px, 21vh, 450px)",
+            position: "relative",
+          }}
+        >
           <Image
             src="/logo-jb.png"
             alt="Jukebox Live"
@@ -48,215 +60,220 @@ export default function TVPage() {
             style={{ mixBlendMode: "screen" }}
           />
         </div>
+
+        {/* Irish Luck — sağda, header'la dikey ortalı */}
+        <div
+          className="absolute right-10 top-1/2"
+          style={{ transform: "translateY(-50%)" }}
+        >
+          <Image
+            src="/logo-venue.png"
+            alt="Irish Luck Pub & Restaurant"
+            width={110}
+            height={110}
+            priority
+            className="object-contain"
+            style={{ mixBlendMode: "screen" }}
+          />
+        </div>
       </div>
 
-      {/* ── Irish Luck — sağ üst köşe, sadece logo ── */}
-      <div className="absolute top-7 right-10 z-20">
-        <Image
-          src="/logo-venue.png"
-          alt="Irish Luck Pub & Restaurant"
-          width={110}
-          height={110}
-          priority
-          className="object-contain"
-          style={{ mixBlendMode: "screen" }}
-        />
-      </div>
+      {/* ── Ana içerik — kalan alanda dikey ortalı ── */}
+      <div
+        className="relative z-10 flex-1 flex items-center justify-center w-full text-center"
+        style={{ paddingBottom: "2rem" }}
+      >
+        <div className="w-full max-w-5xl px-8">
 
-      {/* ── Merkez içerik ── */}
-      <div className="relative z-10 w-full max-w-5xl px-8">
-
-        {/* ── IDLE ── */}
-        {phase === "idle" && (
-          <div>
-            <p className="font-display text-7xl uppercase text-cream mb-4">
-              Sahne Seni Bekliyor
-            </p>
-            <p
-              className="font-label text-cream-300/80 mb-10 tracking-widest"
-              style={{ fontSize: "2.25rem" }}
-            >
-              Masandaki QR kodu okut, sıraya gir
-            </p>
-
-            {waitingQueue.length > 0 && (
-              <div>
-                <div className="divider-ornament mb-6 max-w-xl mx-auto">
-                  <span className="font-label text-brass-light text-xl">
-                    ★ Sıradakiler ★
-                  </span>
-                </div>
-                <div className="space-y-4 max-w-2xl mx-auto">
-                  {waitingQueue.slice(0, 5).map((a, i) => (
-                    <div
-                      key={a.id}
-                      className="paper-card px-8 py-4 flex items-center gap-5"
-                    >
-                      <span className="font-display text-4xl text-jukebox-red w-14 shrink-0">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div className="text-left min-w-0">
-                        <p className="font-display text-2xl uppercase text-cream-900 truncate">
-                          {a.name}
-                        </p>
-                        <p className="font-serif italic text-cream-700 text-xl truncate">
-                          {a.songTitle}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── PERFORMING ── */}
-        {phase === "performing" && (
-          <div>
-            {/* Sadece dönen plak (Varlık 13) — JB-02 üstte sabit */}
-            <div
-              style={{ position: "relative", width: 230, height: 230, margin: "0 auto 1.5rem" }}
-            >
-              <div
-                className="vinyl-spin"
-                style={{ position: "absolute", inset: 0 }}
-              >
-                <Image
-                  src="/logo-vinyl-dark.png"
-                  alt=""
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            </div>
-
-            <p
-              className="font-display uppercase text-cream leading-none mb-5"
-              style={{ fontSize: "clamp(4rem, 10vw, 8rem)" }}
-            >
-              {settings?.currentApplicantName}
-            </p>
-            <p
-              className="font-display uppercase text-jukebox-red-light"
-              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-            >
-              {settings?.currentSongTitle}
-            </p>
-            {settings?.currentSongArtist && (
-              <p className="font-serif italic text-cream-300 text-3xl mt-2">
-                {settings.currentSongArtist}
+          {/* ── IDLE ── */}
+          {phase === "idle" && (
+            <div>
+              <p className="font-display text-7xl uppercase text-cream mb-4">
+                Sahne Seni Bekliyor
               </p>
-            )}
+              <p
+                className="font-label text-cream-300/80 mb-10 tracking-widest"
+                style={{ fontSize: "2.25rem" }}
+              >
+                Masandaki QR kodu okut, sıraya gir
+              </p>
 
-            {nextPerson && (
-              <div className="mt-14 paper-card inline-block px-10 py-4">
-                <p className="jukebox-meta text-sm">Sıradaki</p>
-                <p className="font-display text-2xl uppercase text-cream-900 mt-1">
-                  {nextPerson.name}{" "}
-                  <span className="font-serif italic text-cream-700 text-xl ml-2">
-                    — {nextPerson.songTitle}
-                  </span>
+              {waitingQueue.length > 0 && (
+                <div>
+                  <div className="divider-ornament mb-6 max-w-xl mx-auto">
+                    <span className="font-label text-brass-light text-xl">
+                      ★ Sıradakiler ★
+                    </span>
+                  </div>
+                  <div className="space-y-4 max-w-2xl mx-auto">
+                    {waitingQueue.slice(0, 5).map((a, i) => (
+                      <div
+                        key={a.id}
+                        className="paper-card px-8 py-4 flex items-center gap-5"
+                      >
+                        <span className="font-display text-4xl text-jukebox-red w-14 shrink-0">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <div className="text-left min-w-0">
+                          <p className="font-display text-2xl uppercase text-cream-900 truncate">
+                            {a.name}
+                          </p>
+                          <p className="font-serif italic text-cream-700 text-xl truncate">
+                            {a.songTitle}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── PERFORMING ── */}
+          {phase === "performing" && (
+            <div>
+              <div
+                style={{ position: "relative", width: 230, height: 230, margin: "0 auto 1.5rem" }}
+              >
+                <div className="vinyl-spin" style={{ position: "absolute", inset: 0 }}>
+                  <Image
+                    src="/logo-vinyl-dark.png"
+                    alt=""
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              </div>
+
+              <p
+                className="font-display uppercase text-cream leading-none mb-5"
+                style={{ fontSize: "clamp(4rem, 10vw, 8rem)" }}
+              >
+                {settings?.currentApplicantName}
+              </p>
+              <p
+                className="font-display uppercase text-jukebox-red-light"
+                style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
+              >
+                {settings?.currentSongTitle}
+              </p>
+              {settings?.currentSongArtist && (
+                <p className="font-serif italic text-cream-300 text-3xl mt-2">
+                  {settings.currentSongArtist}
+                </p>
+              )}
+
+              {nextPerson && (
+                <div className="mt-10 paper-card inline-block px-10 py-4">
+                  <p className="jukebox-meta text-sm">Sıradaki</p>
+                  <p className="font-display text-2xl uppercase text-cream-900 mt-1">
+                    {nextPerson.name}{" "}
+                    <span className="font-serif italic text-cream-700 text-xl ml-2">
+                      — {nextPerson.songTitle}
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── VOTING ── */}
+          {phase === "voting" && (
+            <div>
+              <div className="jukebox-strip py-3 max-w-2xl mx-auto mb-6">
+                <p className="font-label text-brass-light text-3xl">
+                  Şimdi Oylayın
                 </p>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* ── VOTING ── */}
-        {phase === "voting" && (
-          <div>
-            <div className="jukebox-strip py-3 max-w-2xl mx-auto mb-6">
-              <p className="font-label text-brass-light text-3xl">
-                Şimdi Oylayın
+              <p
+                className="font-display uppercase text-cream mb-4"
+                style={{ fontSize: "clamp(3.5rem, 9vw, 7rem)" }}
+              >
+                {settings?.currentApplicantName}
               </p>
+              <p className="font-serif italic text-cream-300 text-3xl mb-10">
+                {settings?.currentSongTitle}
+              </p>
+              <div className="flex gap-4 justify-center flex-wrap">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                  <div
+                    key={n}
+                    className="tv-vote-number"
+                    style={{
+                      width: "5.5rem",
+                      height: "5.5rem",
+                      fontSize: "2rem",
+                      animationDuration: `${1 + n * 0.1}s`,
+                    }}
+                  >
+                    <span>{n}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <p
-              className="font-display uppercase text-cream mb-4"
-              style={{ fontSize: "clamp(3.5rem, 9vw, 7rem)" }}
-            >
-              {settings?.currentApplicantName}
-            </p>
-            <p className="font-serif italic text-cream-300 text-3xl mb-10">
-              {settings?.currentSongTitle}
-            </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                <div
-                  key={n}
-                  className="tv-vote-number"
-                  style={{
-                    width: "5.5rem",
-                    height: "5.5rem",
-                    fontSize: "2rem",
-                    animationDuration: `${1 + n * 0.1}s`,
-                  }}
-                >
-                  <span>{n}</span>
+          )}
+
+          {/* ── SHOWING SCORE ── */}
+          {phase === "showing-score" && (
+            <div>
+              <p className="font-label text-brass-light text-2xl mb-4 tracking-widest">
+                Oylama Sona Erdi
+              </p>
+              <p
+                className="font-display uppercase text-cream mb-6"
+                style={{ fontSize: "clamp(3rem, 7vw, 5.5rem)" }}
+              >
+                {settings?.currentApplicantName}
+              </p>
+              {scoreVisible && (
+                <div className="score-pop">
+                  <span
+                    className="font-display neon-text-gold"
+                    style={{ fontSize: "clamp(8rem, 22vw, 16rem)", lineHeight: 1 }}
+                  >
+                    {settings?.currentScore}
+                  </span>
+                  <span className="font-display text-cream-300 text-5xl ml-4">
+                    / 10
+                  </span>
                 </div>
-              ))}
+              )}
             </div>
-          </div>
-        )}
+          )}
 
-        {/* ── SHOWING SCORE ── */}
-        {phase === "showing-score" && (
-          <div>
-            <p className="font-label text-brass-light text-2xl mb-4 tracking-widest">
-              Oylama Sona Erdi
-            </p>
-            <p
-              className="font-display uppercase text-cream mb-6"
-              style={{ fontSize: "clamp(3rem, 7vw, 5.5rem)" }}
-            >
-              {settings?.currentApplicantName}
-            </p>
-            {scoreVisible && (
-              <div className="score-pop">
-                <span
-                  className="font-display neon-text-gold"
-                  style={{ fontSize: "clamp(8rem, 22vw, 16rem)", lineHeight: 1 }}
-                >
-                  {settings?.currentScore}
-                </span>
-                <span className="font-display text-cream-300 text-5xl ml-4">
-                  / 10
-                </span>
+          {/* ── SHOWING WINNER ── */}
+          {phase === "showing-winner" && (
+            <div>
+              <div className="jukebox-strip py-3 max-w-2xl mx-auto mb-6">
+                <p className="font-label text-brass-light text-3xl">
+                  ★ Gecenin Kazananı ★
+                </p>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* ── SHOWING WINNER ── */}
-        {phase === "showing-winner" && (
-          <div>
-            <div className="jukebox-strip py-3 max-w-2xl mx-auto mb-6">
-              <p className="font-label text-brass-light text-3xl">
-                ★ Gecenin Kazananı ★
+              <p
+                className="font-display uppercase text-cream mb-6 winner-glow"
+                style={{ fontSize: "clamp(4rem, 10vw, 8rem)", lineHeight: 1.05 }}
+              >
+                {settings?.currentApplicantName}
               </p>
+              {scoreVisible && (
+                <div className="score-pop">
+                  <span
+                    className="font-display neon-text-gold"
+                    style={{ fontSize: "clamp(8rem, 22vw, 16rem)", lineHeight: 1 }}
+                  >
+                    {settings?.currentScore}
+                  </span>
+                  <span className="font-display text-cream-300 text-5xl ml-4">
+                    / 10
+                  </span>
+                </div>
+              )}
             </div>
-            <p
-              className="font-display uppercase text-cream mb-6 winner-glow"
-              style={{ fontSize: "clamp(4rem, 10vw, 8rem)", lineHeight: 1.05 }}
-            >
-              {settings?.currentApplicantName}
-            </p>
-            {scoreVisible && (
-              <div className="score-pop">
-                <span
-                  className="font-display neon-text-gold"
-                  style={{ fontSize: "clamp(8rem, 22vw, 16rem)", lineHeight: 1 }}
-                >
-                  {settings?.currentScore}
-                </span>
-                <span className="font-display text-cream-300 text-5xl ml-4">
-                  / 10
-                </span>
-              </div>
-            )}
-          </div>
-        )}
+          )}
+
+        </div>
       </div>
     </div>
   );
