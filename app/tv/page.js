@@ -38,17 +38,25 @@ export default function TVPage() {
       <div className="ambient-glow ambient-glow--cyan" />
       <div className="ambient-glow ambient-glow--magenta" />
 
-      {/* ── Header: JB-02 orta + Irish Luck sağda, aynı satır ── */}
+      {/*
+        ── Header bloğu ──
+        In-flow (flex-col içinde yer kaplıyor) → içerik asla üste binmez.
+        İçindeki logolar absolute, birbirinin aynı top hizasında.
+        Yüksekliği: 28px (top-7 offset) + min(450px, 40vh) (JB-02) = min(478px, ~43vh)
+      */}
       <div
-        className="relative z-20 w-full flex items-center justify-center"
-        style={{ paddingTop: "1.5rem", paddingBottom: "0.5rem", flexShrink: 0 }}
+        className="relative z-20 w-full flex-shrink-0"
+        style={{ height: "calc(28px + min(450px, 40vh))" }}
       >
-        {/* JB-02 — responsive 5x, ortalı */}
+        {/* JB-02 — üst merkez, Irish Luck ile aynı top */}
         <div
           style={{
-            width: "clamp(420px, 56vw, 1100px)",
-            height: "clamp(140px, 21vh, 450px)",
-            position: "relative",
+            position: "absolute",
+            top: 28,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "min(1100px, 95vw)",
+            height: "min(450px, 40vh)",
           }}
         >
           <Image
@@ -61,11 +69,8 @@ export default function TVPage() {
           />
         </div>
 
-        {/* Irish Luck — sağda, header'la dikey ortalı */}
-        <div
-          className="absolute right-10 top-1/2"
-          style={{ transform: "translateY(-50%)" }}
-        >
+        {/* Irish Luck — eski yeri: sağ üst köşe */}
+        <div style={{ position: "absolute", top: 28, right: 40 }}>
           <Image
             src="/logo-venue.png"
             alt="Irish Luck Pub & Restaurant"
