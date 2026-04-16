@@ -83,10 +83,10 @@ export default function TVPage() {
         </div>
       </div>
 
-      {/* ── Ana içerik — kalan alanda dikey ortalı ── */}
+      {/* ── Ana içerik — header'ın altından biraz boşlukla başlar ── */}
       <div
-        className="relative z-10 flex-1 flex items-center justify-center w-full text-center"
-        style={{ paddingBottom: "2rem" }}
+        className="relative z-10 flex-1 flex items-start justify-center w-full text-center"
+        style={{ paddingTop: "3rem", paddingBottom: "2rem" }}
       >
         <div className="w-full max-w-5xl px-8">
 
