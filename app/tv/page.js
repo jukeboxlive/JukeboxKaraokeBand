@@ -32,7 +32,7 @@ export default function TVPage() {
   return (
     <div
       className="tv-screen"
-      style={{ flexDirection: "column", alignItems: "stretch", padding: 0 }}
+      style={{ flexDirection: "column", alignItems: "stretch", justifyContent: "flex-start", padding: 0 }}
     >
       {showConfetti && <Confetti />}
       <div className="ambient-glow ambient-glow--cyan" />
