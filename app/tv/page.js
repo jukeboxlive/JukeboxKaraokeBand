@@ -38,22 +38,34 @@ export default function TVPage() {
       <div className="ambient-glow ambient-glow--cyan" />
       <div className="ambient-glow ambient-glow--magenta" />
 
+      {/* Irish Luck — tv-screen'e absolute, her zaman sağ üstte sabit */}
+      <div style={{ position: "absolute", top: 28, right: 40, zIndex: 20 }}>
+        <Image
+          src="/logo-venue.png"
+          alt="Irish Luck Pub & Restaurant"
+          width={110}
+          height={110}
+          priority
+          className="object-contain"
+          style={{ mixBlendMode: "screen" }}
+        />
+      </div>
+
       {/*
         ── Header bloğu ──
-        In-flow yüksekliği = 380px (wordmark'ın görsel alt sınırı).
-        Logo container'ı 500×500 — header'dan taşar ama alt kısmı
-        siyah/transparan olduğundan screen-blend ile tamamen kaybolur.
-        Böylece content pozisyonu korunur, logo büyür, kırpılmaz.
+        marginTop: -130 → tüm blok (logo + altındaki içerik) 130px yukarı kayar.
+        Logo top: 0 → header'ın başından itibaren, yani ekran tepesinden ~130px yukarda başlar.
+        Transparan PNG üst kısmı viewport dışında kalır (screen-blend = görünmez).
+        Efektif in-flow yükseklik: 380 - 130 = 250px → içerik 258px'ten başlar.
       */}
       <div
         className="relative z-20 w-full flex-shrink-0"
-        style={{ height: 240 }}
+        style={{ height: 380, marginTop: -130 }}
       >
-        {/* JB-02 — transparan üst kısmı viewport dışına taşımak için negatif top */}
         <div
           style={{
             position: "absolute",
-            top: -140,
+            top: 0,
             left: "50%",
             transform: "translateX(-50%)",
             width: "min(500px, 46vw)",
@@ -69,25 +81,12 @@ export default function TVPage() {
             style={{ mixBlendMode: "screen" }}
           />
         </div>
-
-        {/* Irish Luck — eski yeri: sağ üst köşe */}
-        <div style={{ position: "absolute", top: 28, right: 40 }}>
-          <Image
-            src="/logo-venue.png"
-            alt="Irish Luck Pub & Restaurant"
-            width={110}
-            height={110}
-            priority
-            className="object-contain"
-            style={{ mixBlendMode: "screen" }}
-          />
-        </div>
       </div>
 
       {/* ── Ana içerik — header'ın altından biraz boşlukla başlar ── */}
       <div
-        className="relative z-10 flex-1 flex items-start justify-center w-full text-center"
-        style={{ paddingTop: "0.5rem", paddingBottom: "2rem" }}
+        className="relative z-10 flex-1 flex items-center justify-center w-full text-center"
+        style={{ paddingBottom: "2rem" }}
       >
         <div className="w-full max-w-5xl px-8">
 
