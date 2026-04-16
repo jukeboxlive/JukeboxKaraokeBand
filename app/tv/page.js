@@ -40,15 +40,16 @@ export default function TVPage() {
 
       {/*
         ── Header bloğu ──
-        In-flow (flex-col içinde yer kaplıyor) → içerik asla üste binmez.
-        İçindeki logolar absolute, birbirinin aynı top hizasında.
-        Yüksekliği: 28px (top-7 offset) + min(450px, 40vh) (JB-02) = min(478px, ~43vh)
+        In-flow → içerik asla üste binmez.
+        JB-02: PNG kare (1024×1024) ama wordmark yatay. object-cover + overflow:hidden
+        ile sadece orta şerit gösterilir; screen-blend siyah kenarları siler.
+        Container yüksekliği: wordmark görsel yüksekliğine eşit (~220px) — çok daha kompakt.
       */}
       <div
         className="relative z-20 w-full flex-shrink-0"
-        style={{ height: "calc(28px + min(450px, 40vh))" }}
+        style={{ height: "calc(28px + 220px)" }}
       >
-        {/* JB-02 — üst merkez, Irish Luck ile aynı top */}
+        {/* JB-02 — cover crop ile sadece wordmark görünür */}
         <div
           style={{
             position: "absolute",
@@ -56,20 +57,24 @@ export default function TVPage() {
             left: "50%",
             transform: "translateX(-50%)",
             width: "min(1100px, 95vw)",
-            height: "min(450px, 40vh)",
+            height: 220,
+            overflow: "hidden",
           }}
         >
           <Image
             src="/logo-jb.png"
             alt="Jukebox Live"
             fill
-            className="object-contain"
             priority
-            style={{ mixBlendMode: "screen" }}
+            style={{
+              objectFit: "cover",
+              objectPosition: "center 45%",
+              mixBlendMode: "screen",
+            }}
           />
         </div>
 
-        {/* Irish Luck — eski yeri: sağ üst köşe */}
+        {/* Irish Luck — eski yeri: sağ üst köşe, JB-02 ile aynı top */}
         <div style={{ position: "absolute", top: 28, right: 40 }}>
           <Image
             src="/logo-venue.png"
@@ -86,7 +91,7 @@ export default function TVPage() {
       {/* ── Ana içerik — header'ın altından biraz boşlukla başlar ── */}
       <div
         className="relative z-10 flex-1 flex items-start justify-center w-full text-center"
-        style={{ paddingTop: "3rem", paddingBottom: "2rem" }}
+        style={{ paddingTop: "1.5rem", paddingBottom: "2rem" }}
       >
         <div className="w-full max-w-5xl px-8">
 
