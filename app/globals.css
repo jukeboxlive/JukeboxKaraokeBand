@@ -260,7 +260,7 @@ body > *:not(.app-grain) {
   font-family: var(--font-playfair), "Playfair Display", serif;
   font-style: italic;
   color: rgb(233, 215, 165);
-  font-size: 0.95rem;
+  font-size: 1.7rem;
 }
 .jukebox-meta {
   font-family: var(--font-bebas), "Bebas Neue", sans-serif;
