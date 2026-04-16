@@ -37,8 +37,8 @@ export default function TVPage() {
       <div className="ambient-glow ambient-glow--magenta" />
 
       {/* ── JB-02 wordmark — üst merkez, tüm fazlarda sabit ── */}
-      <div className="absolute top-5 left-1/2 z-20" style={{ transform: "translateX(-50%)" }}>
-        <div style={{ width: 220, height: 90, position: "relative" }}>
+      <div className="absolute top-4 left-1/2 z-20" style={{ transform: "translateX(-50%)" }}>
+        <div style={{ width: 880, height: 360, position: "relative" }}>
           <Image
             src="/logo-jb.png"
             alt="Jukebox Live"
