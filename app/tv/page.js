@@ -190,7 +190,7 @@ export default function TVPage() {
         {phase === "showing-score" && (
           <div>
             <p className="font-label text-brass-light text-base mb-3">
-              Puan Verildi
+              Oylama Sona Erdi
             </p>
             <p className="font-display text-5xl uppercase text-cream mb-6">
               {settings?.currentApplicantName}

@@ -90,7 +90,7 @@ export default function RequestPage() {
           <BrandHeader size={110} gap="gap-8" className="mb-4" priority />
           <div className="jukebox-strip mb-3">
             <p className="font-label text-cream-300 text-sm">
-              Karaoke Band · Sıra Sende
+              Live Karaoke Band
             </p>
           </div>
           <p className="jukebox-artist text-cream-300 mt-2 max-w-xs mx-auto leading-relaxed">
