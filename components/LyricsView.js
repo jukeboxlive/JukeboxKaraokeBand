@@ -3,7 +3,7 @@
 export default function LyricsView({ song, lyrics, onBack }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="px-4 py-3 flex items-center gap-3 border-b border-cream-300/15 bg-navy-800/40 backdrop-blur">
+      <div className="px-4 py-3 flex items-center gap-3 border-b border-cream-300/15 bg-[rgba(2,14,22,0.82)] backdrop-blur">
         {onBack && (
           <button onClick={onBack} className="back-button mr-1 mb-0">
             ←
@@ -26,7 +26,7 @@ export default function LyricsView({ song, lyrics, onBack }) {
         </div>
       </div>
 
-      <div className="px-4 py-3 text-center border-t border-cream-300/15 bg-navy-800/40 backdrop-blur">
+      <div className="px-4 py-3 text-center border-t border-cream-300/15 bg-[rgba(2,14,22,0.82)] backdrop-blur">
         <p className="font-label text-cream-300 text-xs">
           Sıran Geldiğinde Sahneye Davet Edileceksin
         </p>
