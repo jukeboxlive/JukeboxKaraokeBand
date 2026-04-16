@@ -47,13 +47,13 @@ export default function TVPage() {
       */}
       <div
         className="relative z-20 w-full flex-shrink-0"
-        style={{ height: 380 }}
+        style={{ height: 240 }}
       >
-        {/* JB-02 — 500×500, object-contain, tam görünür */}
+        {/* JB-02 — transparan üst kısmı viewport dışına taşımak için negatif top */}
         <div
           style={{
             position: "absolute",
-            top: 20,
+            top: -140,
             left: "50%",
             transform: "translateX(-50%)",
             width: "min(500px, 46vw)",
