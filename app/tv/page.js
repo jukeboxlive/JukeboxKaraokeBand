@@ -41,24 +41,23 @@ export default function TVPage() {
       {/*
         ── Header bloğu ──
         In-flow → içerik asla üste binmez.
-        JB-02: PNG kare (1024×1024) ama wordmark yatay. object-cover + overflow:hidden
-        ile sadece orta şerit gösterilir; screen-blend siyah kenarları siler.
-        Container yüksekliği: wordmark görsel yüksekliğine eşit (~220px) — çok daha kompakt.
+        JB-02: PNG kare (1024×1024) → object-contain ile tam görünür, kırpılmaz.
+        Container kare tutulur: min(300px, 28vh) × min(300px, 28vh)
+        → 1080p TV'de ~300×300, küçük ekranlarda ölçeklenir.
       */}
       <div
         className="relative z-20 w-full flex-shrink-0"
-        style={{ height: "calc(28px + 220px)" }}
+        style={{ height: "calc(28px + min(300px, 28vh))" }}
       >
-        {/* JB-02 — cover crop ile sadece wordmark görünür */}
+        {/* JB-02 — tam görünür, kırpılmaz */}
         <div
           style={{
             position: "absolute",
             top: 28,
             left: "50%",
             transform: "translateX(-50%)",
-            width: "min(1100px, 95vw)",
-            height: 220,
-            overflow: "hidden",
+            width: "min(300px, 28vh)",
+            height: "min(300px, 28vh)",
           }}
         >
           <Image
@@ -66,11 +65,8 @@ export default function TVPage() {
             alt="Jukebox Live"
             fill
             priority
-            style={{
-              objectFit: "cover",
-              objectPosition: "center 45%",
-              mixBlendMode: "screen",
-            }}
+            className="object-contain"
+            style={{ mixBlendMode: "screen" }}
           />
         </div>
 
