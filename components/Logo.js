@@ -7,7 +7,15 @@ import Image from "next/image";
  * size: px (rendered square)
  */
 export default function Logo({ variant = "circle", size = 120, className = "", priority = false }) {
-  const src = variant === "square" ? "/logo-square.png" : "/logo-circle.png";
+  const src =
+    variant === "square"
+      ? "/logo-square.png"
+      : variant === "jb"
+        ? "/logo-jb.png"
+        : "/logo-vinyl-gold.png";
+  // Black-background assets need screen blend to appear transparent on dark surfaces
+  const needsScreen = variant !== "square";
+
   return (
     <Image
       src={src}
@@ -16,6 +24,7 @@ export default function Logo({ variant = "circle", size = 120, className = "", p
       height={size}
       priority={priority}
       className={`select-none ${className}`}
+      style={needsScreen ? { mixBlendMode: "screen" } : undefined}
     />
   );
 }

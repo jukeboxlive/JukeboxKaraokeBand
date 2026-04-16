@@ -1267,3 +1267,14 @@ textarea.input-field {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ==================== Spinning vinyl record ==================== */
+@keyframes vinylSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.vinyl-spin {
+  animation: vinylSpin 3.6s linear infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
