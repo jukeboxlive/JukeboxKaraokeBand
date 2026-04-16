@@ -259,7 +259,7 @@ body > *:not(.app-grain) {
 .jukebox-artist {
   font-family: var(--font-playfair), "Playfair Display", serif;
   font-style: italic;
-  color: var(--cream-700);
+  color: rgb(233, 215, 165);
   font-size: 0.95rem;
 }
 .jukebox-meta {
