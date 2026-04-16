@@ -36,33 +36,36 @@ export default function TVPage() {
       <div className="ambient-glow ambient-glow--cyan" />
       <div className="ambient-glow ambient-glow--magenta" />
 
+      {/* ── Irish Luck — sağ üst köşe, sadece logo ── */}
+      <div className="absolute top-7 right-10 z-20">
+        <Image
+          src="/logo-venue.png"
+          alt="Irish Luck Pub & Restaurant"
+          width={110}
+          height={110}
+          priority
+          className="object-contain"
+          style={{ mixBlendMode: "screen" }}
+        />
+      </div>
+
+      {/* ── Merkez içerik ── */}
       <div className="relative z-10 w-full max-w-5xl px-8">
 
         {/* ── IDLE ── */}
         {phase === "idle" && (
           <div>
-            {/* Altın plak logosu — idle'da büyük ve ortalı */}
+            {/* Sadece JB-02 wordmark, statik */}
             <div className="flex justify-center mb-8">
-              <div className="relative vinyl-spin" style={{ width: 220, height: 220 }}>
+              <div style={{ width: 320, height: 320, position: "relative" }}>
                 <Image
-                  src="/logo-vinyl-gold.png"
+                  src="/logo-jb.png"
                   alt="Jukebox Live"
                   fill
                   className="object-contain"
                   priority
+                  style={{ mixBlendMode: "screen" }}
                 />
-                {/* JB-02 overlay — plakla birlikte döner */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div style={{ width: "55%", height: "55%", position: "relative" }}>
-                    <Image
-                      src="/logo-jb.png"
-                      alt=""
-                      fill
-                      className="object-contain"
-                      style={{ mixBlendMode: "screen" }}
-                    />
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -111,11 +114,15 @@ export default function TVPage() {
         {/* ── PERFORMING ── */}
         {phase === "performing" && (
           <div>
-            {/* Dönen plak + JB-02 overlay */}
-            <div className="flex justify-center mb-6">
+            {/* Dönen plak (Varlık 13) + sabit JB-02 üstte */}
+            <div
+              className="flex justify-center mb-6"
+              style={{ position: "relative", width: 230, height: 230, margin: "0 auto 1.5rem" }}
+            >
+              {/* Dönen plak — sadece bu katman döner */}
               <div
-                className="vinyl-spin relative"
-                style={{ width: 300, height: 300 }}
+                className="vinyl-spin"
+                style={{ position: "absolute", inset: 0 }}
               >
                 <Image
                   src="/logo-vinyl-dark.png"
@@ -124,17 +131,27 @@ export default function TVPage() {
                   className="object-contain"
                   priority
                 />
-                {/* JB-02 merkeze yerleştirilmiş, plakla birlikte döner */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div style={{ width: "52%", height: "52%", position: "relative" }}>
-                    <Image
-                      src="/logo-jb.png"
-                      alt=""
-                      fill
-                      className="object-contain"
-                      style={{ mixBlendMode: "screen" }}
-                    />
-                  </div>
+              </div>
+
+              {/* JB-02 — dönen katmanın DIŞINDA, sabit ve merkezde */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 10,
+                }}
+              >
+                <div style={{ width: "56%", height: "56%", position: "relative" }}>
+                  <Image
+                    src="/logo-jb.png"
+                    alt="Jukebox Live"
+                    fill
+                    className="object-contain"
+                    style={{ mixBlendMode: "screen" }}
+                  />
                 </div>
               </div>
             </div>
