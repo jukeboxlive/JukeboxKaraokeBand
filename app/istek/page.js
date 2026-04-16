@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { addSongRequest } from "@/lib/firebase";
-import Logo from "@/components/Logo";
+import BrandHeader from "@/components/BrandHeader";
 
 const LIMITS = {
   title: 100,
@@ -56,9 +56,7 @@ export default function RequestPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4 py-10">
         <div className="paper-card p-8 w-full max-w-md text-center space-y-5">
-          <div className="flex justify-center">
-            <Logo variant="circle" size={96} />
-          </div>
+          <BrandHeader size={82} gap="gap-6" className="justify-center" />
           <div className="divider-ornament">
             <span className="font-label text-xs">★ ★ ★</span>
           </div>
@@ -89,9 +87,7 @@ export default function RequestPage() {
     <div className="min-h-screen px-4 py-8">
       <div className="max-w-md mx-auto">
         <div className="text-center mb-6">
-          <div className="flex justify-center mb-3">
-            <Logo variant="circle" size={140} priority />
-          </div>
+          <BrandHeader size={110} gap="gap-8" className="mb-4" priority />
           <div className="jukebox-strip mb-3">
             <p className="font-label text-cream-300 text-sm">
               Karaoke Band · Sıra Sende
@@ -101,14 +97,6 @@ export default function RequestPage() {
             Söylemek istediğin şarkıyı bize bildir. Listeye alalım, etkinlikte
             sahneye çık.
           </p>
-        </div>
-
-        {/* Instagram CTA */}
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <span className="font-label text-cream-300/60 text-xs tracking-widest">Takip Et</span>
-          <span className="font-label text-brass-light text-sm tracking-widest">@jukeboxlive</span>
-          <span className="text-cream-300/30 text-xs">·</span>
-          <span className="font-label text-brass-light text-sm tracking-widest">@jukeboxliveband</span>
         </div>
 
         <form onSubmit={handleSubmit} className="glass p-6 space-y-4 rounded-2xl">

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { useSongs, useSongUsageCounts } from "@/lib/hooks";
-import Logo from "@/components/Logo";
+import BrandHeader from "@/components/BrandHeader";
 
 const MAX_SONG_USAGE = 2;
 
@@ -38,15 +38,10 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
   return (
     <div className="page-container">
       <div className="text-center mb-6">
-        <div className="flex justify-center mb-2">
-          <Logo variant="circle" size={120} priority />
-        </div>
+        <BrandHeader size={92} gap="gap-8" className="mb-3" priority />
         <div className="jukebox-strip py-1">
           <p className="font-label text-xs">Şarkını Seç · Sahneye Çık</p>
         </div>
-        <p className="font-label text-cream-300/50 text-xs mt-2 tracking-widest">
-          @jukeboxlive · @jukeboxliveband
-        </p>
       </div>
 
       {myApplicant && onViewMyLyrics && (

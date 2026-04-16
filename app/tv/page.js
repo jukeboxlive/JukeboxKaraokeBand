@@ -2,7 +2,7 @@
 import { useSettings, useQueue } from "@/lib/hooks";
 import { useEffect, useState } from "react";
 import Confetti from "@/components/Confetti";
-import Logo from "@/components/Logo";
+import BrandHeader from "@/components/BrandHeader";
 
 export default function TVPage() {
   const settings = useSettings();
@@ -37,10 +37,8 @@ export default function TVPage() {
       <div className="ambient-glow ambient-glow--cyan" />
       <div className="ambient-glow ambient-glow--magenta" />
 
-      {/* Logo + wordmark */}
-      <div className="relative z-10 flex flex-col items-center mb-10">
-        <Logo variant="circle" size={180} priority />
-      </div>
+      {/* Logos */}
+      <BrandHeader size={170} gap="gap-16" className="relative z-10 mb-10" priority />
 
       <div className="relative z-10 w-full max-w-4xl">
         {/* ── IDLE ── */}
@@ -193,14 +191,6 @@ export default function TVPage() {
         )}
       </div>
 
-      {/* Instagram follow strip — always visible at bottom of TV */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-center gap-5 py-3 border-t border-cream-300/15"
-           style={{ background: "rgba(2, 10, 18, 0.78)", backdropFilter: "blur(8px)" }}>
-        <span className="font-label text-cream-300/60 text-sm tracking-widest">Bizi Takip Et</span>
-        <span className="text-brass-light font-label text-lg tracking-widest">@jukeboxlive</span>
-        <span className="text-cream-300/30 text-sm">·</span>
-        <span className="text-brass-light font-label text-lg tracking-widest">@jukeboxliveband</span>
-      </div>
     </div>
   );
 }
