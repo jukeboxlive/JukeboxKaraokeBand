@@ -36,6 +36,20 @@ export default function TVPage() {
       <div className="ambient-glow ambient-glow--cyan" />
       <div className="ambient-glow ambient-glow--magenta" />
 
+      {/* ── JB-02 wordmark — üst merkez, tüm fazlarda sabit ── */}
+      <div className="absolute top-5 left-1/2 z-20" style={{ transform: "translateX(-50%)" }}>
+        <div style={{ width: 220, height: 90, position: "relative" }}>
+          <Image
+            src="/logo-jb.png"
+            alt="Jukebox Live"
+            fill
+            className="object-contain"
+            priority
+            style={{ mixBlendMode: "screen" }}
+          />
+        </div>
+      </div>
+
       {/* ── Irish Luck — sağ üst köşe, sadece logo ── */}
       <div className="absolute top-7 right-10 z-20">
         <Image
@@ -55,20 +69,6 @@ export default function TVPage() {
         {/* ── IDLE ── */}
         {phase === "idle" && (
           <div>
-            {/* Sadece JB-02 wordmark, statik */}
-            <div className="flex justify-center mb-8">
-              <div style={{ width: 320, height: 320, position: "relative" }}>
-                <Image
-                  src="/logo-jb.png"
-                  alt="Jukebox Live"
-                  fill
-                  className="object-contain"
-                  priority
-                  style={{ mixBlendMode: "screen" }}
-                />
-              </div>
-            </div>
-
             <p className="font-display text-7xl uppercase text-cream mb-4">
               Sahne Seni Bekliyor
             </p>
@@ -114,12 +114,10 @@ export default function TVPage() {
         {/* ── PERFORMING ── */}
         {phase === "performing" && (
           <div>
-            {/* Dönen plak (Varlık 13) + sabit JB-02 üstte */}
+            {/* Sadece dönen plak (Varlık 13) — JB-02 üstte sabit */}
             <div
-              className="flex justify-center mb-6"
               style={{ position: "relative", width: 230, height: 230, margin: "0 auto 1.5rem" }}
             >
-              {/* Dönen plak — sadece bu katman döner */}
               <div
                 className="vinyl-spin"
                 style={{ position: "absolute", inset: 0 }}
@@ -131,28 +129,6 @@ export default function TVPage() {
                   className="object-contain"
                   priority
                 />
-              </div>
-
-              {/* JB-02 — dönen katmanın DIŞINDA, sabit ve merkezde */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  zIndex: 10,
-                }}
-              >
-                <div style={{ width: "56%", height: "56%", position: "relative" }}>
-                  <Image
-                    src="/logo-jb.png"
-                    alt="Jukebox Live"
-                    fill
-                    className="object-contain"
-                    style={{ mixBlendMode: "screen" }}
-                  />
-                </div>
               </div>
             </div>
 
