@@ -103,6 +103,14 @@ export default function RequestPage() {
           </p>
         </div>
 
+        {/* Instagram CTA */}
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <span className="font-label text-cream-300/60 text-xs tracking-widest">Takip Et</span>
+          <span className="font-label text-brass-light text-sm tracking-widest">@jukeboxlive</span>
+          <span className="text-cream-300/30 text-xs">·</span>
+          <span className="font-label text-brass-light text-sm tracking-widest">@jukeboxliveband</span>
+        </div>
+
         <form onSubmit={handleSubmit} className="glass p-6 space-y-4 rounded-2xl">
           <div>
             <label className="field-label">Şarkı Adı</label>

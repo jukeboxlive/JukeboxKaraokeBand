@@ -44,6 +44,9 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
         <div className="jukebox-strip py-1">
           <p className="font-label text-xs">Şarkını Seç · Sahneye Çık</p>
         </div>
+        <p className="font-label text-cream-300/50 text-xs mt-2 tracking-widest">
+          @jukeboxlive · @jukeboxliveband
+        </p>
       </div>
 
       {myApplicant && onViewMyLyrics && (
