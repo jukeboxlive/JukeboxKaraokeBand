@@ -93,12 +93,15 @@ export default function TVPage() {
           {/* ── IDLE ── */}
           {phase === "idle" && (
             <div>
-              <p className="font-display text-7xl uppercase text-cream-900 mb-4">
+              <p
+                className="font-display text-7xl uppercase mb-4"
+                style={{ color: "#14242e" }}
+              >
                 Sahne Seni Bekliyor
               </p>
               <p
-                className="font-label text-cream-700/80 mb-10 tracking-widest"
-                style={{ fontSize: "2.25rem" }}
+                className="font-label mb-10 tracking-widest"
+                style={{ fontSize: "2.25rem", color: "#14242e" }}
               >
                 Masandaki QR kodu okut, sıraya gir
               </p>
