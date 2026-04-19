@@ -2,20 +2,45 @@
 import { useState, useEffect } from "react";
 import { useDeviceId, useSettings } from "@/lib/hooks";
 import { useStore } from "@/lib/store";
+import ConsentModal from "@/components/ConsentModal";
+import {
+  KVKK_TEXT,
+  KVKK_TITLE,
+  RIZA_TEXT,
+  RIZA_TITLE,
+} from "@/lib/consentTexts";
 
 const MAX_NAME_LENGTH = 50;
 const MAX_INSTAGRAM_LENGTH = 30;
+
+// Client IP best-effort — consent kaydı için bilgi amaçlı.
+async function fetchClientIp() {
+  try {
+    const res = await fetch("https://api.ipify.org?format=json", {
+      cache: "no-store",
+    });
+    if (!res.ok) return "unknown";
+    const json = await res.json();
+    return json?.ip || "unknown";
+  } catch {
+    return "unknown";
+  }
+}
 
 export default function ApplicantForm({ song, onBack, onSubmitted }) {
   const deviceId = useDeviceId();
   const settings = useSettings();
   const { actions } = useStore();
+
   const [form, setForm] = useState({
     name: "",
     surname: "",
     instagram: "",
     kvkk: false,
+    acikRiza: false,
   });
+  const [kvkkModal, setKvkkModal] = useState(false);
+  const [rizaModal, setRizaModal] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [cooldown, setCooldown] = useState(null);
@@ -35,6 +60,20 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
     }
   }, [deviceId, settings?.currentStageId, actions]);
 
+  // KVKK iptal edilirse Açık Rıza da otomatik iptal olur.
+  const toggleKvkk = (checked) => {
+    setForm((f) => ({
+      ...f,
+      kvkk: checked,
+      acikRiza: checked ? f.acikRiza : false,
+    }));
+  };
+
+  const toggleRiza = (checked) => {
+    if (!form.kvkk) return; // disabled guard
+    setForm((f) => ({ ...f, acikRiza: checked }));
+  };
+
   const handleSubmit = async () => {
     const name = form.name.trim();
     const surname = form.surname.trim();
@@ -49,12 +88,17 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
       return setError(
         `Instagram kullanıcı adı en fazla ${MAX_INSTAGRAM_LENGTH} karakter olabilir.`,
       );
-    if (!form.kvkk) return setError("KVKK onayı zorunlu.");
+    if (!form.kvkk || !form.acikRiza) {
+      return setError(
+        "Sıraya girebilmek için KVKK Aydınlatma Metni ve Açık Rıza Beyanı'nı onaylamanız zorunludur.",
+      );
+    }
     if (submitting) return;
     setError("");
     setSubmitting(true);
 
     try {
+      const ip = await fetchClientIp();
       const ref = await actions.addApplicant({
         name,
         surname,
@@ -64,6 +108,11 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
         songArtist: song.artist,
         stageId: settings.currentStageId,
         deviceId,
+        consent: {
+          kvkk: true,
+          acikRiza: true,
+          ip,
+        },
       });
       onSubmitted(ref.id, song.lyrics || "Sözler henüz eklenmemiş.");
     } catch (err) {
@@ -152,17 +201,62 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
           </div>
         </div>
 
+        {/* ── KVKK onayı ── */}
         <label className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={form.kvkk}
-            onChange={(e) => setForm({ ...form, kvkk: e.target.checked })}
-            className="mt-1 w-5 h-5 rounded accent-jukebox-red"
+            onChange={(e) => toggleKvkk(e.target.checked)}
+            className="mt-1 w-5 h-5 rounded accent-jukebox-red shrink-0"
             style={{ accentColor: "#c4302a" }}
           />
           <span className="text-xs text-cream-300 leading-relaxed">
-            KVKK Aydınlatma Metni'ni okudum ve kişisel verilerimin işlenmesini
-            kabul ediyorum.
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                setKvkkModal(true);
+              }}
+              className="underline text-cream hover:text-brass-light"
+            >
+              KVKK Aydınlatma Metni
+            </button>
+            ’ni okudum ve kişisel verilerimin işlenmesini kabul ediyorum.
+          </span>
+        </label>
+
+        {/* ── Açık Rıza onayı (KVKK onaylanmadan pasif) ── */}
+        <label
+          className={`flex items-start gap-3 ${
+            form.kvkk ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={form.acikRiza}
+            disabled={!form.kvkk}
+            onChange={(e) => toggleRiza(e.target.checked)}
+            className="mt-1 w-5 h-5 rounded accent-jukebox-red shrink-0"
+            style={{ accentColor: "#c4302a" }}
+          />
+          <span className="text-xs text-cream-300 leading-relaxed">
+            <button
+              type="button"
+              disabled={!form.kvkk}
+              onClick={(e) => {
+                e.preventDefault();
+                if (form.kvkk) setRizaModal(true);
+              }}
+              className={`underline ${
+                form.kvkk
+                  ? "text-cream hover:text-brass-light"
+                  : "text-cream-300"
+              }`}
+            >
+              Açık Rıza Beyanı
+            </button>
+            ’nı okudum; ses/görüntü kayıtlarımın alınmasına ve sosyal medyada
+            yayınlanmasına açık rıza veriyorum.
           </span>
         </label>
       </div>
@@ -180,6 +274,21 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
       >
         {submitting ? "Kaydediliyor..." : "Sıraya Gir!"}
       </button>
+
+      <ConsentModal
+        visible={kvkkModal}
+        title={KVKK_TITLE}
+        text={KVKK_TEXT}
+        onClose={() => setKvkkModal(false)}
+        onAccept={() => toggleKvkk(true)}
+      />
+      <ConsentModal
+        visible={rizaModal}
+        title={RIZA_TITLE}
+        text={RIZA_TEXT}
+        onClose={() => setRizaModal(false)}
+        onAccept={() => toggleRiza(true)}
+      />
     </div>
   );
 }
