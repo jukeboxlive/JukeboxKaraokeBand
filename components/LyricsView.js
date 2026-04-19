@@ -20,7 +20,7 @@ export default function LyricsView({ song, lyrics, onBack }) {
 
       <div className="flex-1 flex items-start justify-center px-6 py-8 overflow-y-auto">
         <div className="paper-card p-6 md:p-8 max-w-lg w-full">
-          <p className="text-cream-900 text-lg leading-loose whitespace-pre-line font-serif">
+          <p className="text-cream-900 text-lg leading-loose whitespace-pre-line font-serif text-center">
             {lyrics}
           </p>
         </div>
