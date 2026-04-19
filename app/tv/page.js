@@ -93,11 +93,11 @@ export default function TVPage() {
           {/* ── IDLE ── */}
           {phase === "idle" && (
             <div>
-              <p className="font-display text-7xl uppercase text-cream mb-4">
+              <p className="font-display text-7xl uppercase text-cream-900 mb-4">
                 Sahne Seni Bekliyor
               </p>
               <p
-                className="font-label text-cream-300/80 mb-10 tracking-widest"
+                className="font-label text-cream-700/80 mb-10 tracking-widest"
                 style={{ fontSize: "2.25rem" }}
               >
                 Masandaki QR kodu okut, sıraya gir
@@ -106,7 +106,7 @@ export default function TVPage() {
               {waitingQueue.length > 0 && (
                 <div>
                   <div className="divider-ornament mb-6 max-w-xl mx-auto">
-                    <span className="font-label text-brass-light text-xl">
+                    <span className="font-label text-jukebox-red-dark text-xl">
                       ★ Sıradakiler ★
                     </span>
                   </div>
@@ -153,19 +153,19 @@ export default function TVPage() {
               </div>
 
               <p
-                className="font-display uppercase text-cream leading-none mb-5"
+                className="font-display uppercase text-cream-900 leading-none mb-5"
                 style={{ fontSize: "clamp(4rem, 10vw, 8rem)" }}
               >
                 {settings?.currentApplicantName}
               </p>
               <p
-                className="font-display uppercase text-jukebox-red-light"
+                className="font-display uppercase text-jukebox-red-dark"
                 style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
               >
                 {settings?.currentSongTitle}
               </p>
               {settings?.currentSongArtist && (
-                <p className="font-serif italic text-cream-300 text-3xl mt-2">
+                <p className="font-serif italic text-cream-700 text-3xl mt-2">
                   {settings.currentSongArtist}
                 </p>
               )}
@@ -188,17 +188,17 @@ export default function TVPage() {
           {phase === "voting" && (
             <div>
               <div className="jukebox-strip py-3 max-w-2xl mx-auto mb-6">
-                <p className="font-label text-brass-light text-3xl">
+                <p className="font-label text-jukebox-red-dark text-3xl">
                   Şimdi Oylayın
                 </p>
               </div>
               <p
-                className="font-display uppercase text-cream mb-4"
+                className="font-display uppercase text-cream-900 mb-4"
                 style={{ fontSize: "clamp(3.5rem, 9vw, 7rem)" }}
               >
                 {settings?.currentApplicantName}
               </p>
-              <p className="font-serif italic text-cream-300 text-3xl mb-10">
+              <p className="font-serif italic text-cream-700 text-3xl mb-10">
                 {settings?.currentSongTitle}
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
@@ -223,11 +223,11 @@ export default function TVPage() {
           {/* ── SHOWING SCORE ── */}
           {phase === "showing-score" && (
             <div>
-              <p className="font-label text-brass-light text-2xl mb-4 tracking-widest">
+              <p className="font-label text-jukebox-red-dark text-2xl mb-4 tracking-widest">
                 Oylama Sona Erdi
               </p>
               <p
-                className="font-display uppercase text-cream mb-6"
+                className="font-display uppercase text-cream-900 mb-6"
                 style={{ fontSize: "clamp(3rem, 7vw, 5.5rem)" }}
               >
                 {settings?.currentApplicantName}
@@ -240,7 +240,7 @@ export default function TVPage() {
                   >
                     {settings?.currentScore}
                   </span>
-                  <span className="font-display text-cream-300 text-5xl ml-4">
+                  <span className="font-display text-cream-700 text-5xl ml-4">
                     / 10
                   </span>
                 </div>
@@ -252,12 +252,12 @@ export default function TVPage() {
           {phase === "showing-winner" && (
             <div>
               <div className="jukebox-strip py-3 max-w-2xl mx-auto mb-6">
-                <p className="font-label text-brass-light text-3xl">
+                <p className="font-label text-jukebox-red-dark text-3xl">
                   ★ Gecenin Kazananı ★
                 </p>
               </div>
               <p
-                className="font-display uppercase text-cream mb-6 winner-glow"
+                className="font-display uppercase text-cream-900 mb-6 winner-glow"
                 style={{ fontSize: "clamp(4rem, 10vw, 8rem)", lineHeight: 1.05 }}
               >
                 {settings?.currentApplicantName}
@@ -270,7 +270,7 @@ export default function TVPage() {
                   >
                     {settings?.currentScore}
                   </span>
-                  <span className="font-display text-cream-300 text-5xl ml-4">
+                  <span className="font-display text-cream-700 text-5xl ml-4">
                     / 10
                   </span>
                 </div>

@@ -964,8 +964,10 @@ textarea.input-field {
 
 .tv-screen {
   min-height: 100vh;
-  /* transparent — body texture shows through as the stage floor */
-  background: transparent;
+  /* TV-only: cream paper texture */
+  background:
+    url("/texture-tv.jpg") center/cover no-repeat,
+    #e9d7a5;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -975,7 +977,7 @@ textarea.input-field {
   text-align: center;
   padding: 4rem 2rem;
 }
-/* stronger mood lighting for TV — more dramatic red top, brass bottom */
+/* softer warm vignette — works with cream paper */
 .tv-screen::before {
   content: "";
   position: absolute;
@@ -983,16 +985,59 @@ textarea.input-field {
   background:
     radial-gradient(
       ellipse at top,
-      rgba(196, 48, 42, 0.32) 0%,
+      rgba(196, 48, 42, 0.14) 0%,
       transparent 55%
     ),
     radial-gradient(
       ellipse at bottom,
-      rgba(212, 169, 75, 0.22) 0%,
+      rgba(138, 30, 25, 0.10) 0%,
       transparent 60%
     );
   pointer-events: none;
   z-index: 0;
+}
+
+/* ──── TV-specific overrides: readable on cream paper ──── */
+.tv-screen .neon-text-gold {
+  color: #c4302a;
+  text-shadow: 0 0 16px rgba(196, 48, 42, 0.35);
+}
+.tv-screen .divider-ornament {
+  color: rgba(138, 30, 25, 0.75);
+}
+.tv-screen .divider-ornament::before,
+.tv-screen .divider-ornament::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(138, 30, 25, 0.35),
+    transparent
+  );
+}
+.tv-screen .jukebox-strip::before,
+.tv-screen .jukebox-strip::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(138, 30, 25, 0.5),
+    transparent
+  );
+}
+.tv-screen .winner-glow {
+  animation: winnerGlowCream 1.5s ease-in-out infinite;
+}
+@keyframes winnerGlowCream {
+  0%,
+  100% {
+    text-shadow:
+      0 0 20px rgba(196, 48, 42, 0.5),
+      0 0 40px rgba(196, 48, 42, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 30px rgba(196, 48, 42, 0.75),
+      0 0 60px rgba(196, 48, 42, 0.4);
+  }
 }
 
 .tv-logo {
