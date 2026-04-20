@@ -37,14 +37,14 @@ export default function BrandHeader({
       <div className="flex flex-col items-center gap-2">
         <Logo variant="circle" size={size} priority={priority} />
         <a
-          href="#"
+          href="https://instagram.com/jukeboxlivekaraokeband"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 font-label tracking-widest text-brass-light hover:text-brass transition-colors"
           style={{ fontSize: labelSize }}
         >
           <InstagramIcon size={iconSize} />
-          @jukeboxlive
+          @jukeboxlivekaraokeband
         </a>
       </div>
 
@@ -60,14 +60,14 @@ export default function BrandHeader({
           style={{ mixBlendMode: "screen" }}
         />
         <a
-          href="#"
+          href="https://instagram.com/irishlucktepe"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 font-label tracking-widest text-brass-light hover:text-brass transition-colors"
           style={{ fontSize: labelSize }}
         >
           <InstagramIcon size={iconSize} />
-          @irishluck_pub
+          @irishlucktepe
         </a>
       </div>
     </div>
