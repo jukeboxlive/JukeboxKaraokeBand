@@ -44,7 +44,7 @@ export default function BrandHeader({
           style={{ fontSize: labelSize }}
         >
           <InstagramIcon size={iconSize} />
-          @jukeboxlivekaraokeband
+          @JUKEBOXLIVEKARAOKEBAND
         </a>
       </div>
 
@@ -67,7 +67,7 @@ export default function BrandHeader({
           style={{ fontSize: labelSize }}
         >
           <InstagramIcon size={iconSize} />
-          @irishlucktepe
+          @IRISHLUCKTEPE
         </a>
       </div>
     </div>
