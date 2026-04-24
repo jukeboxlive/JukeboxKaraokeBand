@@ -36,8 +36,8 @@ export default function TVPage() {
   const scoreHue = hasScore ? Math.max(0, Math.min(10, scoreNum)) * 12 : 0;
   const scoreStyle = hasScore
     ? {
-        color: `hsl(${scoreHue}, 85%, 48%)`,
-        textShadow: `0 0 18px hsla(${scoreHue}, 85%, 55%, 0.45), 0 0 42px hsla(${scoreHue}, 85%, 55%, 0.25)`,
+        color: `hsl(${scoreHue}, 70%, 32%)`,
+        textShadow: `0 0 14px hsla(${scoreHue}, 70%, 40%, 0.3), 0 0 32px hsla(${scoreHue}, 70%, 40%, 0.18)`,
       }
     : {};
 
