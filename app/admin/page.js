@@ -5,6 +5,7 @@ import { useStore } from "@/lib/store";
 import QRCode from "@/components/QRCode";
 import SongManager from "@/components/SongManager";
 import AdminAuthGate from "@/components/AdminAuthGate";
+import AdminPasswordConfirm from "@/components/AdminPasswordConfirm";
 import Logo from "@/components/Logo";
 
 function GripIcon() {
@@ -32,6 +33,11 @@ function AdminDashboard() {
   const dragItem = useRef(null);
   const dragOverItem = useRef(null);
   const [draggingIdx, setDraggingIdx] = useState(null);
+
+  // Şifre onayı gerektiren kritik aksiyonlar için modal state
+  const [confirmModal, setConfirmModal] = useState(null);
+  const openConfirm = (config) => setConfirmModal(config);
+  const closeConfirm = () => setConfirmModal(null);
 
   const safeAction = async (fn) => {
     setActionError("");
@@ -91,15 +97,22 @@ function AdminDashboard() {
           </div>
           <div className="flex items-center gap-3 flex-wrap">
             <button
-              onClick={() =>
-                safeAction(async () => {
-                  if (settings?.isLive) {
-                    await actions.endStage();
-                  } else {
-                    await actions.createStage();
-                  }
-                })
-              }
+              onClick={() => {
+                const live = settings?.isLive;
+                openConfirm({
+                  title: live ? "Canlı Yayını Kapat" : "Canlı Yayını Aç",
+                  message: live
+                    ? "Aktif oturum sona erdirilecek, sıradaki tüm başvurular arşivlenecek. Devam etmek için admin şifrenizi girin."
+                    : "Yeni bir canlı oturum başlatmak üzeresiniz. Devam etmek için admin şifrenizi girin.",
+                  confirmLabel: live ? "Evet, Kapat" : "Evet, Başlat",
+                  tone: live ? "danger" : "primary",
+                  onConfirm: () =>
+                    safeAction(async () => {
+                      if (live) await actions.endStage();
+                      else await actions.createStage();
+                    }),
+                });
+              }}
               className={`badge ${settings?.isLive ? "badge--live" : "badge--offline"}`}
             >
               {settings?.isLive ? "● Canlı" : "Kapalı"}
@@ -214,10 +227,16 @@ function AdminDashboard() {
               )}
 
               <button
-                onClick={() => {
-                  if (confirm("Tüm sırayı temizlemek istediğinize emin misiniz?"))
-                    safeAction(() => actions.clearAll());
-                }}
+                onClick={() =>
+                  openConfirm({
+                    title: "Tüm Sırayı Temizle",
+                    message:
+                      "Tüm sıra kalıcı olarak silinecek. Bu işlem geri alınamaz. Devam etmek için admin şifrenizi girin.",
+                    confirmLabel: "Evet, Temizle",
+                    tone: "danger",
+                    onConfirm: () => safeAction(() => actions.clearAll()),
+                  })
+                }
                 className="btn-danger"
               >
                 Tümünü Temizle
@@ -306,6 +325,16 @@ function AdminDashboard() {
           </p>
         </div>
       </div>
+
+      <AdminPasswordConfirm
+        visible={!!confirmModal}
+        title={confirmModal?.title}
+        message={confirmModal?.message}
+        confirmLabel={confirmModal?.confirmLabel}
+        tone={confirmModal?.tone}
+        onConfirm={confirmModal?.onConfirm}
+        onClose={closeConfirm}
+      />
     </div>
   );
 }

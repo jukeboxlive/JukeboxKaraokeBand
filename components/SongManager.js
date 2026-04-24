@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { subscribeAllSongs } from "@/lib/firebase";
 import { useStore } from "@/lib/store";
+import AdminPasswordConfirm from "@/components/AdminPasswordConfirm";
 
 const GENRES = ["Pop", "Rock", "Jazz", "R&B", "Hip-Hop", "Elektronik", "Türkü", "Arabesk"];
 
@@ -67,6 +68,7 @@ export default function SongManager() {
   const [editingSongId, setEditingSongId] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [error, setError] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   useEffect(() => {
     const unsub = subscribeAllSongs((data) => setSongs(data));
@@ -132,12 +134,8 @@ export default function SongManager() {
     await actions.updateSong(song.id, { isActive: !song.isActive });
   };
 
-  const handleHardDelete = async (song) => {
-    const ok = window.confirm(
-      `"${song.title}" kalıcı olarak silinsin mi? Bu işlem geri alınamaz.`,
-    );
-    if (!ok) return;
-    await actions.deleteSongPermanent(song.id);
+  const handleHardDelete = (song) => {
+    setDeleteTarget(song);
   };
 
   const activeSongs = songs.filter((s) => s.isActive !== false);
@@ -215,6 +213,23 @@ export default function SongManager() {
           ),
         )}
       </div>
+
+      <AdminPasswordConfirm
+        visible={!!deleteTarget}
+        title="Şarkıyı Kalıcı Olarak Sil"
+        message={
+          deleteTarget
+            ? `"${deleteTarget.title}" — ${deleteTarget.artist} kalıcı olarak silinecek. Bu işlem geri alınamaz. Devam etmek için admin şifrenizi girin.`
+            : ""
+        }
+        confirmLabel="Evet, Sil"
+        tone="danger"
+        onConfirm={async () => {
+          if (!deleteTarget) return;
+          await actions.deleteSongPermanent(deleteTarget.id);
+        }}
+        onClose={() => setDeleteTarget(null)}
+      />
 
       {inactiveSongs.length > 0 && (
         <div className="mt-6">
