@@ -133,8 +133,13 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
     return (
       <div className="page-container">
         <div className="paper-card p-6 text-center space-y-4">
-          <p className="font-display text-2xl uppercase">Biraz Bekle</p>
-          <p className="jukebox-artist text-cream-700">
+          <p
+            className="font-display text-2xl uppercase"
+            style={{ color: "#14242e" }}
+          >
+            Biraz Bekle
+          </p>
+          <p className="jukebox-artist" style={{ color: "#14242e" }}>
             {cooldown.remainingMinutes} dakika sonra tekrar başvurabilirsin.
           </p>
           <button onClick={onBack} className="btn-secondary">
