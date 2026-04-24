@@ -54,7 +54,10 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
             {myApplicant.songTitle}
           </p>
           <p className="jukebox-artist text-cream-300">
-            {myApplicant.songArtist} · Sözlerine dön →
+            {myApplicant.songArtist}
+          </p>
+          <p className="jukebox-artist text-brass-light mt-1">
+            Sözlerine dön →
           </p>
         </button>
       )}
