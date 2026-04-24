@@ -74,7 +74,13 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics, disa
         />
         <a
           href="/istek"
-          className="shrink-0 px-5 rounded-lg border border-jukebox-red/60 bg-jukebox-red/20 hover:bg-jukebox-red/30 active:bg-jukebox-red/40 text-cream font-label tracking-widest uppercase text-sm flex items-center justify-center whitespace-nowrap transition-colors"
+          className="shrink-0 px-5 rounded-lg border text-cream font-label tracking-widest uppercase text-sm flex items-center justify-center whitespace-nowrap transition-colors"
+          style={{
+            background: "#376452",
+            borderColor: "#2a4d3f",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "#41745f")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "#376452")}
           aria-label="Çalınmasını istediğin şarkıyı bildir"
         >
           İstek
