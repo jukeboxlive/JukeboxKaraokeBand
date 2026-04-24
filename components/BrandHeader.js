@@ -18,9 +18,8 @@ function InstagramIcon({ size = 13 }) {
 }
 
 /**
- * Renders Jukebox + venue logos side by side with clickable Instagram handles.
- * size: logo size in px
- * gap: Tailwind gap class between the two logos (default "gap-10")
+ * Renders Jukebox + venue logos side by side. Whole column (logo + handle)
+ * is a single clickable link to the brand's Instagram profile.
  */
 export default function BrandHeader({
   size = 110,
@@ -34,22 +33,31 @@ export default function BrandHeader({
   return (
     <div className={`flex items-start justify-center ${gap} ${className}`}>
       {/* ── Jukebox Live ── */}
-      <div className="flex flex-col items-center gap-2">
+      <a
+        href="https://instagram.com/jukeboxlivekaraokeband"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Jukebox Live Karaoke Band — Instagram"
+        className="flex flex-col items-center gap-2 group"
+      >
         <Logo variant="circle" size={size} priority={priority} />
-        <a
-          href="https://instagram.com/jukeboxlivekaraokeband"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 font-label tracking-widest text-brass-light hover:text-brass transition-colors"
+        <span
+          className="flex items-center gap-1.5 font-label tracking-widest text-brass-light group-hover:text-brass transition-colors"
           style={{ fontSize: labelSize }}
         >
           <InstagramIcon size={iconSize} />
           @JUKEBOXLIVEKARAOKEBAND
-        </a>
-      </div>
+        </span>
+      </a>
 
       {/* ── Irish Luck Pub & Restaurant ── */}
-      <div className="flex flex-col items-center gap-2">
+      <a
+        href="https://instagram.com/irishlucktepe"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Irish Luck Pub & Restaurant — Instagram"
+        className="flex flex-col items-center gap-2 group"
+      >
         <Image
           src="/logo-venue.png"
           alt="Irish Luck Pub & Restaurant"
@@ -59,17 +67,14 @@ export default function BrandHeader({
           className="object-contain"
           style={{ mixBlendMode: "screen" }}
         />
-        <a
-          href="https://instagram.com/irishlucktepe"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 font-label tracking-widest text-brass-light hover:text-brass transition-colors"
+        <span
+          className="flex items-center gap-1.5 font-label tracking-widest text-brass-light group-hover:text-brass transition-colors"
           style={{ fontSize: labelSize }}
         >
           <InstagramIcon size={iconSize} />
           @IRISHLUCKTEPE
-        </a>
-      </div>
+        </span>
+      </a>
     </div>
   );
 }
