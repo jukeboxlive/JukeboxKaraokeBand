@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useSettings, useQueue, useAllQueue, useVoteCount, useClientUrl } from "@/lib/hooks";
 import { useStore } from "@/lib/store";
 import QRCode from "@/components/QRCode";
@@ -7,19 +7,6 @@ import SongManager from "@/components/SongManager";
 import AdminAuthGate from "@/components/AdminAuthGate";
 import AdminPasswordConfirm from "@/components/AdminPasswordConfirm";
 import Logo from "@/components/Logo";
-
-function GripIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-      <circle cx="5" cy="3" r="1.5" />
-      <circle cx="11" cy="3" r="1.5" />
-      <circle cx="5" cy="8" r="1.5" />
-      <circle cx="11" cy="8" r="1.5" />
-      <circle cx="5" cy="13" r="1.5" />
-      <circle cx="11" cy="13" r="1.5" />
-    </svg>
-  );
-}
 
 function AdminDashboard() {
   const [actionError, setActionError] = useState("");
@@ -29,10 +16,6 @@ function AdminDashboard() {
   const voteCount = useVoteCount();
   const { actions } = useStore();
   const joinUrl = useClientUrl("/join");
-
-  const dragItem = useRef(null);
-  const dragOverItem = useRef(null);
-  const [draggingIdx, setDraggingIdx] = useState(null);
 
   // Şifre onayı gerektiren kritik aksiyonlar için modal state
   const [confirmModal, setConfirmModal] = useState(null);
@@ -54,31 +37,21 @@ function AdminDashboard() {
   const onStage = queue.find((a) => a.status === "on-stage");
   const nextUp = waitingQueue[0];
 
-  const handleDragStart = (idx) => {
-    dragItem.current = idx;
-    setDraggingIdx(idx);
-  };
-
-  const handleDragEnter = (idx) => {
-    dragOverItem.current = idx;
-  };
-
-  const handleDragEnd = () => {
-    const from = dragItem.current;
-    const to = dragOverItem.current;
-    setDraggingIdx(null);
-
-    if (from === null || to === null || from === to) return;
-
+  // Dokunmatik ekran uyumlu sıra değiştirme: ▲ ▼ butonları
+  const moveItem = (from, to) => {
+    if (
+      from === to ||
+      from < 0 ||
+      to < 0 ||
+      from >= waitingQueue.length ||
+      to >= waitingQueue.length
+    )
+      return;
     const reordered = [...waitingQueue];
     const [moved] = reordered.splice(from, 1);
     reordered.splice(to, 0, moved);
-
     const orderedIds = reordered.map((a) => a.id);
     safeAction(() => actions.reorderQueue(orderedIds));
-
-    dragItem.current = null;
-    dragOverItem.current = null;
   };
 
   return (
@@ -272,18 +245,27 @@ function AdminDashboard() {
               ) : (
                 <div className="space-y-2">
                   {waitingQueue.map((a, i) => (
-                    <div
-                      key={a.id}
-                      draggable
-                      onDragStart={() => handleDragStart(i)}
-                      onDragEnter={() => handleDragEnter(i)}
-                      onDragEnd={handleDragEnd}
-                      onDragOver={(e) => e.preventDefault()}
-                      className={`queue-item group ${draggingIdx === i ? "queue-item--dragging" : ""}`}
-                    >
-                      <span className="drag-handle">
-                        <GripIcon />
-                      </span>
+                    <div key={a.id} className="queue-item group">
+                      <div className="flex flex-col gap-0.5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => moveItem(i, i - 1)}
+                          disabled={i === 0}
+                          aria-label="Yukarı taşı"
+                          className="queue-reorder-btn"
+                        >
+                          ▲
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => moveItem(i, i + 1)}
+                          disabled={i === waitingQueue.length - 1}
+                          aria-label="Aşağı taşı"
+                          className="queue-reorder-btn"
+                        >
+                          ▼
+                        </button>
+                      </div>
                       <span className="font-display text-brass-light w-7 text-lg">
                         {String(i + 1).padStart(2, "0")}
                       </span>

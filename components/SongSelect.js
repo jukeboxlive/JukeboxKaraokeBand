@@ -86,7 +86,7 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
         </div>
       )}
 
-      <div className="space-y-2.5 max-h-[62vh] overflow-y-auto pr-1">
+      <div className="space-y-2.5 max-h-[62vh] overflow-y-auto pr-1 touch-scroll">
         {songs.length === 0 ? (
           <p className="empty-state animate-pulse">Yükleniyor...</p>
         ) : filtered.length === 0 ? (

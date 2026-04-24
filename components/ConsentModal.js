@@ -41,7 +41,7 @@ export default function ConsentModal({ visible, title, text, onClose, onAccept }
         </div>
 
         <div
-          className="px-6 py-4 overflow-y-auto text-cream-300 text-sm leading-relaxed whitespace-pre-wrap"
+          className="px-6 py-4 overflow-y-auto touch-scroll text-cream-300 text-sm leading-relaxed whitespace-pre-wrap"
           style={{ flex: 1 }}
         >
           {text}
