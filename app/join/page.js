@@ -11,7 +11,6 @@ import SongSelect from "@/components/SongSelect";
 import ApplicantForm from "@/components/ApplicantForm";
 import LyricsView from "@/components/LyricsView";
 import VoteModal from "@/components/VoteModal";
-import Logo from "@/components/Logo";
 
 export default function JoinPage() {
   const settings = useSettings();
@@ -78,38 +77,24 @@ export default function JoinPage() {
     );
   }
 
-  if (!settings?.isLive) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center space-y-5 max-w-sm">
-          <div className="flex justify-center">
-            <Logo variant="circle" size={180} priority />
-          </div>
-          <div className="jukebox-strip py-1">
-            <p className="font-label text-sm">Sahne Şu An Kapalı</p>
-          </div>
-          <p className="jukebox-artist text-cream-300 mt-2">
-            Etkinlik henüz başlamadı. Birazdan tekrar dene.
-          </p>
-          <a href="/istek" className="inline-block">
-            <span className="btn-secondary">İstek Bırak →</span>
-          </a>
-        </div>
-      </div>
-    );
-  }
+  const isLive = !!settings?.isLive;
+  // When the stage is closed, keep the user on the song list so they can still
+  // browse — cards are rendered disabled by SongSelect. Form / lyrics views
+  // are only reachable when live.
+  const activeView = isLive ? view : "select-song";
 
   return (
     <div className="min-h-screen relative">
-      {view === "select-song" && (
+      {activeView === "select-song" && (
         <SongSelect
           onSelect={handleSongSelect}
-          myApplicant={myApplicant}
+          myApplicant={isLive ? myApplicant : null}
           onViewMyLyrics={handleViewMyLyrics}
+          disabled={!isLive}
         />
       )}
 
-      {view === "form" && (
+      {activeView === "form" && (
         <ApplicantForm
           song={selectedSong}
           onBack={() => setView("select-song")}
@@ -117,7 +102,7 @@ export default function JoinPage() {
         />
       )}
 
-      {view === "lyrics" && (
+      {activeView === "lyrics" && (
         <LyricsView
           song={selectedSong}
           lyrics={cachedLyrics}

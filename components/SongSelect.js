@@ -5,7 +5,7 @@ import BrandHeader from "@/components/BrandHeader";
 
 const MAX_SONG_USAGE = 2;
 
-export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
+export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics, disabled = false }) {
   const songs = useSongs();
   const songUsage = useSongUsageCounts();
   const [search, setSearch] = useState("");
@@ -40,7 +40,9 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
       <div className="text-center mb-6">
         <BrandHeader size={92} gap="gap-8" className="mb-3" priority />
         <div className="jukebox-strip py-1">
-          <p className="font-label text-xs">Şarkını Seç · Sahneye Çık</p>
+          <p className="font-label text-xs">
+            {disabled ? "Sahne Şu An Kapalı · Listeye Göz At" : "Şarkını Seç · Sahneye Çık"}
+          </p>
         </div>
       </div>
 
@@ -62,14 +64,21 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
         </button>
       )}
 
-      <div className="mb-4">
+      <div className="mb-4 flex gap-2">
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Şarkı veya sanatçı ara..."
-          className="input-field"
+          className="input-field flex-1 min-w-0"
         />
+        <a
+          href="/istek"
+          className="shrink-0 px-5 rounded-lg border border-jukebox-red/60 bg-jukebox-red/20 hover:bg-jukebox-red/30 active:bg-jukebox-red/40 text-cream font-label tracking-widest uppercase text-sm flex items-center justify-center whitespace-nowrap transition-colors"
+          aria-label="Çalınmasını istediğin şarkıyı bildir"
+        >
+          İstek
+        </a>
       </div>
 
       {genres.length > 2 && (
@@ -95,14 +104,15 @@ export default function SongSelect({ onSelect, myApplicant, onViewMyLyrics }) {
           filtered.map((song, idx) => {
             const usage = songUsage[song.id] || 0;
             const isFull = usage >= MAX_SONG_USAGE;
+            const cardDisabled = isFull || disabled;
             const number = String(idx + 1).padStart(3, "0");
 
             return (
               <button
                 key={song.id}
-                onClick={() => !isFull && onSelect(song)}
-                disabled={isFull}
-                className={`song-card pl-4 ${isFull ? "opacity-60 cursor-not-allowed" : ""}`}
+                onClick={() => !cardDisabled && onSelect(song)}
+                disabled={cardDisabled}
+                className={`song-card pl-4 ${cardDisabled ? "opacity-60 cursor-not-allowed" : ""}`}
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0">
