@@ -29,6 +29,18 @@ export default function TVPage() {
   const waitingQueue = queue.filter((a) => a.status === "waiting");
   const nextPerson = waitingQueue[0];
 
+  // 0 → kırmızı (0°), 10 → yeşil (120°). Ortada amber/sarı geçişi.
+  const score = settings?.currentScore;
+  const scoreNum = typeof score === "number" ? score : parseFloat(score);
+  const hasScore = Number.isFinite(scoreNum);
+  const scoreHue = hasScore ? Math.max(0, Math.min(10, scoreNum)) * 12 : 0;
+  const scoreStyle = hasScore
+    ? {
+        color: `hsl(${scoreHue}, 85%, 48%)`,
+        textShadow: `0 0 18px hsla(${scoreHue}, 85%, 55%, 0.45), 0 0 42px hsla(${scoreHue}, 85%, 55%, 0.25)`,
+      }
+    : {};
+
   return (
     <div
       className="tv-screen"
@@ -240,7 +252,11 @@ export default function TVPage() {
                 <div className="score-pop">
                   <span
                     className="font-display neon-text-gold"
-                    style={{ fontSize: "clamp(8rem, 22vw, 16rem)", lineHeight: 1 }}
+                    style={{
+                      fontSize: "clamp(8rem, 22vw, 16rem)",
+                      lineHeight: 1,
+                      ...scoreStyle,
+                    }}
                   >
                     {settings?.currentScore}
                   </span>
@@ -270,7 +286,11 @@ export default function TVPage() {
                 <div className="score-pop">
                   <span
                     className="font-display neon-text-gold"
-                    style={{ fontSize: "clamp(8rem, 22vw, 16rem)", lineHeight: 1 }}
+                    style={{
+                      fontSize: "clamp(8rem, 22vw, 16rem)",
+                      lineHeight: 1,
+                      ...scoreStyle,
+                    }}
                   >
                     {settings?.currentScore}
                   </span>
