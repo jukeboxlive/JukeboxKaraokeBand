@@ -142,7 +142,11 @@ export default function ApplicantForm({ song, onBack, onSubmitted }) {
           <p className="jukebox-artist" style={{ color: "#14242e" }}>
             {cooldown.remainingMinutes} dakika sonra tekrar başvurabilirsin.
           </p>
-          <button onClick={onBack} className="btn-secondary">
+          <button
+            onClick={onBack}
+            className="btn-secondary"
+            style={{ color: "#14242e", borderColor: "#14242e" }}
+          >
             Geri Dön
           </button>
         </div>
