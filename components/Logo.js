@@ -11,10 +11,11 @@ export default function Logo({ variant = "circle", size = 120, className = "", p
     variant === "square"
       ? "/logo-square.png"
       : variant === "jb"
-        ? "/logo-jb.png"
-        : "/logo-vinyl-gold.png";
-  // Black-background assets need screen blend to appear transparent on dark surfaces
-  const needsScreen = variant !== "square";
+        ? "/logo-jb-06.png"
+        : "/logo-jb-06.png";
+  // New JB-06 logo is already transparent-bordered; only square variant needs no blend.
+  // Legacy vinyl-gold assets used mixBlendMode: "screen" — JB-06 does not.
+  const needsScreen = false;
 
   return (
     <Image

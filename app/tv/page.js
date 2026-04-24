@@ -85,12 +85,11 @@ export default function TVPage() {
           }}
         >
           <Image
-            src="/logo-jb.png"
+            src="/logo-jb-06.png"
             alt="Jukebox Live"
             fill
             priority
             className="object-contain"
-            style={{ mixBlendMode: "screen" }}
           />
         </div>
       </div>
