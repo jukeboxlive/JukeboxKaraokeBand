@@ -204,15 +204,16 @@ export default function TVPage() {
               <p className="font-serif italic text-cream-700 text-3xl mb-10">
                 {settings?.currentSongTitle}
               </p>
-              <div className="flex gap-4 justify-center flex-wrap">
+              <div className="flex gap-3 justify-center flex-nowrap w-full">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                   <div
                     key={n}
                     className="tv-vote-number"
                     style={{
-                      width: "5.5rem",
-                      height: "5.5rem",
-                      fontSize: "2rem",
+                      width: "clamp(3rem, 7vw, 5.5rem)",
+                      height: "clamp(3rem, 7vw, 5.5rem)",
+                      fontSize: "clamp(1.25rem, 2.5vw, 2rem)",
+                      flexShrink: 0,
                       animationDuration: `${1 + n * 0.1}s`,
                     }}
                   >
