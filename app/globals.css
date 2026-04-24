@@ -946,46 +946,26 @@ textarea.input-field {
 
 .drag-handle {
   color: var(--cream-300);
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: grab;
-  padding: 0.25rem;
-  transition: opacity 0.2s, color 0.2s;
+  padding: 0.5rem 0.4rem;
+  transition: opacity 0.2s, color 0.2s, background 0.15s;
   flex-shrink: 0;
+  border-radius: 6px;
+  background: rgba(233, 215, 165, 0.05);
+  /* dnd-kit sensor'ların touch'ı scroll'la karıştırmaması için kritik */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 .drag-handle:hover {
   opacity: 1;
   color: var(--brass-light);
+  background: rgba(244, 200, 105, 0.12);
 }
 .drag-handle:active {
   cursor: grabbing;
-}
-
-/* Queue reorder buttons — touch-friendly ▲▼ controls (replace HTML5 drag) */
-.queue-reorder-btn {
-  width: 1.75rem;
-  height: 1.25rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  line-height: 1;
-  color: var(--cream-300);
-  background: rgba(233, 215, 165, 0.06);
-  border: 1px solid rgba(233, 215, 165, 0.15);
-  border-radius: 4px;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.queue-reorder-btn:hover:not(:disabled),
-.queue-reorder-btn:active:not(:disabled) {
-  background: rgba(244, 200, 105, 0.18);
-  border-color: rgba(244, 200, 105, 0.5);
-  color: var(--brass-light);
-}
-.queue-reorder-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+  background: rgba(244, 200, 105, 0.22);
 }
 
 /* Touch-scroll helper — prevents scroll chaining to parent page on mobile */

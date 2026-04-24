@@ -7,6 +7,22 @@ import SongManager from "@/components/SongManager";
 import AdminAuthGate from "@/components/AdminAuthGate";
 import AdminPasswordConfirm from "@/components/AdminPasswordConfirm";
 import Logo from "@/components/Logo";
+import SortableQueueItem from "@/components/SortableQueueItem";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
 
 function AdminDashboard() {
   const [actionError, setActionError] = useState("");
@@ -37,19 +53,27 @@ function AdminDashboard() {
   const onStage = queue.find((a) => a.status === "on-stage");
   const nextUp = waitingQueue[0];
 
-  // Dokunmatik ekran uyumlu sıra değiştirme: ▲ ▼ butonları
-  const moveItem = (from, to) => {
-    if (
-      from === to ||
-      from < 0 ||
-      to < 0 ||
-      from >= waitingQueue.length ||
-      to >= waitingQueue.length
-    )
-      return;
-    const reordered = [...waitingQueue];
-    const [moved] = reordered.splice(from, 1);
-    reordered.splice(to, 0, moved);
+  // dnd-kit sensörleri — pointer (mouse/pen) + touch + klavye.
+  // activationConstraint: ufak hareketler scroll ile karışmasın diye eşikli.
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 6 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 180, tolerance: 8 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = waitingQueue.findIndex((a) => a.id === active.id);
+    const newIndex = waitingQueue.findIndex((a) => a.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    const reordered = arrayMove(waitingQueue, oldIndex, newIndex);
     const orderedIds = reordered.map((a) => a.id);
     safeAction(() => actions.reorderQueue(orderedIds));
   };
@@ -243,53 +267,31 @@ function AdminDashboard() {
               {waitingQueue.length === 0 ? (
                 <p className="empty-state py-8">Sırada kimse yok</p>
               ) : (
-                <div className="space-y-2">
-                  {waitingQueue.map((a, i) => (
-                    <div key={a.id} className="queue-item group">
-                      <div className="flex flex-col gap-0.5 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => moveItem(i, i - 1)}
-                          disabled={i === 0}
-                          aria-label="Yukarı taşı"
-                          className="queue-reorder-btn"
-                        >
-                          ▲
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => moveItem(i, i + 1)}
-                          disabled={i === waitingQueue.length - 1}
-                          aria-label="Aşağı taşı"
-                          className="queue-reorder-btn"
-                        >
-                          ▼
-                        </button>
-                      </div>
-                      <span className="font-display text-brass-light w-7 text-lg">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-cream text-sm font-semibold truncate">
-                          {a.name}{" "}
-                          <span className="text-cream-300/70">{a.surname}</span>
-                        </p>
-                        <p className="text-xs text-cream-300 truncate italic">
-                          {a.songTitle} — {a.songArtist}
-                        </p>
-                        {a.instagram && (
-                          <p className="text-xs neon-text-magenta">@{a.instagram}</p>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => safeAction(() => actions.updateApplicantStatus(a.id, "cancelled"))}
-                        className="queue-item__cancel"
-                      >
-                        İptal
-                      </button>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={waitingQueue.map((a) => a.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div className="space-y-2">
+                      {waitingQueue.map((a, i) => (
+                        <SortableQueueItem
+                          key={a.id}
+                          applicant={a}
+                          index={i}
+                          onCancel={(id) =>
+                            safeAction(() =>
+                              actions.updateApplicantStatus(id, "cancelled"),
+                            )
+                          }
+                        />
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </SortableContext>
+                </DndContext>
               )}
             </div>
           </div>
