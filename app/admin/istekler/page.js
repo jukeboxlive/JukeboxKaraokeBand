@@ -8,7 +8,7 @@ import {
 import AdminAuthGate from "@/components/AdminAuthGate";
 import Logo from "@/components/Logo";
 
-const GENRES = ["Pop", "Rock", "Jazz", "R&B", "Hip-Hop", "Elektronik", "Türkü", "Arabesk"];
+const GENRES = ["Pop", "Rock", "Jazz", "R&B", "Hip-Hop", "Elektronik", "Türkü", "Arabesk", "Indie"];
 
 function formatDate(timestamp) {
   if (!timestamp?.seconds) return "—";
