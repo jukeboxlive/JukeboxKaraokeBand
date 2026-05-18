@@ -1012,6 +1012,46 @@ textarea.input-field {
   z-index: 0;
 }
 
+/*
+  TV overscan güvenli alanı. Safari → HDMI → TV'de televizyonlar
+  görüntünün kenarlarından ~%3-5 kırpar (overscan). Tüm içerik bu
+  güvenli alanın içinde tutulur, hiçbir şey üstten/kenardan kesilmez.
+*/
+.tv-safe {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  padding: 4.5vh 4.5vw;
+  overflow: hidden;
+}
+
+.tv-venue-logo {
+  position: absolute;
+  top: 4.5vh;
+  right: 4.5vw;
+  width: clamp(70px, 7vw, 130px);
+  height: clamp(70px, 7vw, 130px);
+  z-index: 20;
+}
+
+/* Jukebox logosu — sabit yükseklikli blok, üstten kesilmez */
+.tv-logo-wrap {
+  flex-shrink: 0;
+  height: clamp(180px, 30vh, 360px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tv-logo-inner {
+  position: relative;
+  width: min(440px, 40vw);
+  height: 100%;
+}
+
 /* ──── TV-specific overrides: readable on cream paper ──── */
 .tv-screen .neon-text-gold {
   color: #c4302a;
