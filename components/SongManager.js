@@ -69,6 +69,7 @@ export default function SongManager() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [error, setError] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const unsub = subscribeAllSongs((data) => setSongs(data));
@@ -138,8 +139,18 @@ export default function SongManager() {
     setDeleteTarget(song);
   };
 
-  const activeSongs = songs.filter((s) => s.isActive !== false);
-  const inactiveSongs = songs.filter((s) => s.isActive === false);
+  const q = query.trim().toLocaleLowerCase("tr");
+  const matchesQuery = (s) =>
+    !q ||
+    (s.artist || "").toLocaleLowerCase("tr").includes(q) ||
+    (s.title || "").toLocaleLowerCase("tr").includes(q);
+
+  const activeSongs = songs.filter(
+    (s) => s.isActive !== false && matchesQuery(s),
+  );
+  const inactiveSongs = songs.filter(
+    (s) => s.isActive === false && matchesQuery(s),
+  );
 
   return (
     <div className="glass rounded-2xl p-6">
@@ -150,6 +161,25 @@ export default function SongManager() {
         <button onClick={startAdd} className="btn-secondary">
           {addingNew ? "İptal" : "+ Şarkı Ekle"}
         </button>
+      </div>
+
+      <div className="relative mb-4">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Sanatçı veya şarkı adı ara…"
+          className="input-field pr-10"
+        />
+        {query && (
+          <button
+            onClick={() => setQuery("")}
+            aria-label="Aramayı temizle"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-cream-300 hover:text-cream text-lg leading-none"
+          >
+            ×
+          </button>
+        )}
       </div>
 
       {addingNew && (
@@ -166,6 +196,11 @@ export default function SongManager() {
       )}
 
       <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 touch-scroll">
+        {activeSongs.length === 0 && (
+          <p className="empty-state py-6">
+            {q ? `"${query.trim()}" için sonuç yok` : "Şarkı yok"}
+          </p>
+        )}
         {activeSongs.map((song) =>
           editingSongId === song.id ? (
             <SongForm
