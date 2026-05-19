@@ -4,6 +4,7 @@ import { useSettings, useQueue, useAllQueue, useVoteCount, useClientUrl } from "
 import { useStore } from "@/lib/store";
 import QRCode from "@/components/QRCode";
 import SongManager from "@/components/SongManager";
+import ScoreBoard from "@/components/ScoreBoard";
 import AdminAuthGate from "@/components/AdminAuthGate";
 import AdminPasswordConfirm from "@/components/AdminPasswordConfirm";
 import Logo from "@/components/Logo";
@@ -296,6 +297,9 @@ function AdminDashboard() {
             </div>
           </div>
         </div>
+
+        {/* scores */}
+        <ScoreBoard />
 
         {/* songs */}
         <SongManager />
