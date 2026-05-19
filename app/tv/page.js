@@ -69,18 +69,20 @@ export default function TVPage() {
           />
         </div>
 
-        {/* ── Jukebox logosu — tamamen görünür, üstten kesilmez ── */}
-        <div className="tv-logo-wrap">
-          <div className="tv-logo-inner">
-            <Image
-              src="/logo-jb-06.png"
-              alt="Jukebox Live"
-              fill
-              priority
-              className="object-contain"
-            />
+        {/* ── Jukebox logosu — performans fazında vinyl ile çakışmasın diye gizlenir ── */}
+        {phase !== "performing" && (
+          <div className="tv-logo-wrap">
+            <div className="tv-logo-inner">
+              <Image
+                src="/logo-jb-06.png"
+                alt="Jukebox Live"
+                fill
+                priority
+                className="object-contain"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* ── Ana içerik — kalan alanı doldurur, ortalanır ── */}
         <div className="relative z-10 flex-1 flex items-center justify-center w-full text-center min-h-0">
