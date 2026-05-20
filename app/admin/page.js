@@ -118,6 +118,9 @@ function AdminDashboard() {
             <a href="/admin/istekler" className="btn-secondary">
               İstekler
             </a>
+            <a href="/admin/tablet" target="_blank" className="btn-secondary">
+              Tablet
+            </a>
             <a href="/tv" target="_blank" className="btn-secondary">
               TV Ekranı
             </a>
