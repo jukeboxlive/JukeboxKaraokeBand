@@ -56,7 +56,7 @@ function TabletLyrics() {
         <div className="max-w-4xl mx-auto">
           {lyrics ? (
             <pre
-              className="font-serif text-cream whitespace-pre-wrap leading-relaxed"
+              className="font-serif text-cream whitespace-pre-wrap leading-relaxed text-center"
               style={{
                 fontSize: "clamp(1.5rem, 3.2vw, 2.4rem)",
                 lineHeight: 1.55,
